@@ -22,6 +22,16 @@ $ docker-compose exec php bash
 # npm install && npm run dev
 ```
 
+```
+# composer require laravel/ui
+# php artisan ui vue --auth
+# php artisan migrate
+```
+
+```
+# npm install && npm run dev
+```
+
 ## ENV_FILE
 
 `docker-compose.yml`と同じ階層に
