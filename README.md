@@ -7,7 +7,7 @@ NGINX
 
 ## 環境構築
 
-`git clone`してきてね
+### Dockerだけ参考にしたい場合
 
 ```
 $ docker-compose up -d
@@ -17,8 +17,12 @@ bashで入ってlaravel8のインストールする
 ```
 $ docker-compose exec php bash
 ```
+
+多分`backend/laravel/laravel`になってるわ
+階層上げといて! `backend/laravel`
+
 ```
-# composer require laravel/laravel:^8.0 .
+# composer create-project laravel/laravel:^8.0 .
 # npm install && npm run dev
 ```
 
@@ -30,6 +34,19 @@ $ docker-compose exec php bash
 
 ```
 # npm install && npm run dev
+```
+
+### `git clone`する場合
+```
+$ docker compose up -d
+```
+
+```
+$ docker-compose exec php bash
+```
+
+```
+# comp
 ```
 
 ## ENV_FILE
