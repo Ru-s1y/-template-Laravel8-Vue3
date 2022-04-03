@@ -43,6 +43,9 @@ Route::middleware([
     Route::get('/chat', function () {
         return Inertia::render('Chat/container');
     })->name('chat');
+    Route::get('/canvas', function () {
+        return Inertia::render('Canvas/container');
+    })->name('canvas');
 });
 
 Route::middleware('auth:sanctum')->get('/chat/rooms', [ChatController::class, 'rooms']);
