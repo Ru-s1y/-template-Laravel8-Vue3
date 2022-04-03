@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +17,40 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
-Auth::routes();
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+});
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/chat', function () {
+        return Inertia::render('Chat/container');
+    })->name('chat');
+});
+
+Route::middleware('auth:sanctum')->get('/chat/rooms', [ChatController::class, 'rooms']);
+Route::middleware('auth:sanctum')->get('/chat/room/{roomId}/messages', [ChatController::class, 'messages']);
+Route::middleware('auth:sanctum')->post('/chat/room/{roomId}/messages', [ChatController::class, 'newMessage']);
+
+// Route::middleware('auth:sanctum')->group(['prefix' => 'chat'], function () {
+//     Route::get('rooms', 'ChatController@rooms');
+//     Route::get('room/{roomId}/messages', 'ChatController@messages');
+//     Route::post('room/{roomId}/messages', 'ChatController@newMessage');
+// });
