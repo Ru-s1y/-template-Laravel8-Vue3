@@ -1,13 +1,15 @@
 # Laravel8 + Vue3 環境構築セット
 
-Laravel8(php8.0)
-Vue3
-MySQL
-NGINX
+||||
+|--|--|--|
+|Laravel|8.83.6|php8.0.17|
+|Vue|3.2.31||
+|MySQL|8.0||
+|NGINX|1.21.6||
 
 ## 環境構築
 
-### Dockerだけ参考にしたい場合
+### Dockerfile, docker-compose.ymlだけ使いたい場合
 
 ```
 $ docker-compose up -d
@@ -36,7 +38,7 @@ $ docker-compose exec php bash
 # npm install && npm run dev
 ```
 
-### `git clone`する場合
+### git cloneする場合
 ```
 $ docker compose up -d
 ```
@@ -46,7 +48,13 @@ $ docker-compose exec php bash
 ```
 
 ```
-# comp
+# composer install
+# php artisan key:generate
+# php artisan migrate
+```
+
+```
+# npm install && npm run dev
 ```
 
 ## ENV_FILE
