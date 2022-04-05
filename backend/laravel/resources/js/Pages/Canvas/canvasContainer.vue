@@ -24,8 +24,8 @@ export default {
     },
     methods: {
         drawStart( e ) {
-            var x = e.layerX;
-            var y = e.layerY;
+            var x = e.offsetX;
+            var y = e.offsetY;
 
             this.ctx.beginPath();
             this.ctx.lineTo( x, y );
@@ -34,8 +34,8 @@ export default {
             this.isDrag = true;
         },
         draw( e ) {
-            var x = e.layerX;
-            var y = e.layerY;
+            var x = e.offsetX;
+            var y = e.offsetY;
 
             if (!this.isDrag) return;
 
@@ -60,5 +60,6 @@ export default {
 <style scoped>
 .canvas {
     border: 1px solid #000;
+    background-color: #fff;
 }
 </style>

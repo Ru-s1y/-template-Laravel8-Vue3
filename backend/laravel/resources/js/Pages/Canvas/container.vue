@@ -14,9 +14,18 @@ import CanvasContainer from './canvasContainer.vue';
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <canvas-container />
+                    <div class="canvas-area">
+                        <canvas-container />
+                    </div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+.canvas-area {
+    padding: 5rem;
+    background-color: gray;
+}
+</style>
