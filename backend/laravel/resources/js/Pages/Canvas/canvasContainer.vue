@@ -1,65 +1,115 @@
 <template>
-    <canvas
-        class="canvas"
-        width="480"
-        height="320"
-        @mousedown="drawStart"
-        @mouseup="drawEnd"
-        @mouseout="drawEnd"
-        @mousemove="draw"
-    ></canvas>
+    <div class="overflow-scroll canvas-container outer">
+        <canvas
+            id="myCanvas"
+            class="canvas"
+            width="800"
+            height="600"
+            @mousedown="drawStart"
+            @mouseup="drawEnd"
+            @mouseout="drawEnd"
+            @mousemove="draw"
+        ></canvas>
+    </div>
 </template>
 
 <script>
 export default {
+    props: {
+        setting: {
+            color: String,
+            lineWidth: Number
+        }
+    },
+    watch: {
+        setting(newSetting) {
+            this.setting = newSetting;
+        },
+        isDrag(flg) {
+            if (flg) return;
+            if (this.history.location.length > 0)
+                this.pushHistory();
+            this.history = this.setEmpty();
+        }
+    },
     data: function () {
         return {
             canvas: null,
             ctx: null,
             isDrag: false,
-            lastPosition: { x: null, y: null },
-            lineWidth: 3,
-            strokeStyle: '#000'
+            lastPosition: [],
+            history: this.setEmpty()
         }
     },
     methods: {
+        setEmpty() {
+            return {
+                lineWidth: this.setting.lineWidth,
+                color: this.setting.color,
+                location: [],
+                drew_at: null
+            };
+        },
         drawStart( e ) {
-            var x = e.offsetX;
-            var y = e.offsetY;
+            this.ctx.lineWidth   = this.setting.lineWidth;
+            this.ctx.strokeStyle = this.setting.color;
+
+            const x = e.offsetX;
+            const y = e.offsetY;
 
             this.ctx.beginPath();
             this.ctx.lineTo( x, y );
             this.ctx.stroke();
-
             this.isDrag = true;
+            this.history.location.push([x, y]);
         },
         draw( e ) {
-            var x = e.offsetX;
-            var y = e.offsetY;
-
+            const x = e.offsetX;
+            const y = e.offsetY;
             if (!this.isDrag) return;
 
+            this.history.location.push([x, y]);
             this.ctx.lineTo( x, y );
             this.ctx.stroke();
         },
         drawEnd( e ) {
             this.ctx.closePath();
             this.isDrag = false;
+        },
+        pushHistory() {
+            this.history.lineWidth = this.setting.lineWidth;
+            this.history.color     = this.setting.color;
+            this.history.drew_at   = Date.now();
+            console.log(this.history);
         }
     },
     mounted() {
-        this.ctx = this.$el.getContext('2d');
+        this.canvas = document.querySelector('#myCanvas');
+        this.ctx = this.canvas.getContext('2d');
         this.ctx.lineCap     = 'round';
         this.ctx.lineJoin    = 'round';
-        this.ctx.lineWidth   = this.lineWidth;
-        this.ctx.strokeStyle = this.strokeStyle;
+        this.ctx.lineWidth   = this.setting.lineWidth;
+        this.ctx.strokeStyle = this.setting.color;
     }
 }
 </script>
 
 <style scoped>
+.canvas-container {
+    background-color: gray;
+    margin: 0;
+    height: 80vh;
+}
+.outer {
+    position: relative;
+}
 .canvas {
-    border: 1px solid #000;
     background-color: #fff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
 }
 </style>
