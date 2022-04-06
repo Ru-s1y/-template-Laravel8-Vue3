@@ -6,8 +6,13 @@ import ToolContainer from './toolContainer.vue';
 
 <template>
     <AppLayout title="Dashboard">
-        <tool-container v-bind:color="setting.color" v-on:setColor="setColor" />
-        <canvas-container :setting="setting" />
+        <tool-container
+            v-bind:color="setting.color"
+            v-on:setColor="setColor"
+            v-on:setLineWidth="setLineWidth"
+            v-on:switchEraser="switchEraser" />
+        <canvas-container
+            :setting="setting" />
     </AppLayout>
 </template>
 
@@ -17,13 +22,20 @@ export default {
         return {
             setting: {
                 color: '#000',
-                lineWidth: 3
+                lineWidth: '3',
+                eraser: false
             }
         }
     },
     methods: {
         setColor( color ) {
             this.setting.color = color;
+        },
+        setLineWidth( width ) {
+            this.setting.lineWidth = width;
+        },
+        switchEraser( checked ) {
+            this.setting.eraser = checked;
         }
     }
 }

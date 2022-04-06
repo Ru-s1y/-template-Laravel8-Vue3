@@ -18,14 +18,15 @@ export default {
     props: {
         setting: {
             color: String,
-            lineWidth: Number
+            lineWidth: Number,
+            eraser: Boolean
         }
     },
     watch: {
-        setting(newSetting) {
+        setting( newSetting ) {
             this.setting = newSetting;
         },
-        isDrag(flg) {
+        isDrag( flg ) {
             if (flg) return;
             if (this.history.location.length > 0)
                 this.pushHistory();
@@ -35,7 +36,7 @@ export default {
     data: function () {
         return {
             canvas: null,
-            ctx: null,
+            ctx:    null,
             isDrag: false,
             lastPosition: [],
             history: this.setEmpty()
@@ -44,15 +45,18 @@ export default {
     methods: {
         setEmpty() {
             return {
-                lineWidth: this.setting.lineWidth,
-                color: this.setting.color,
-                location: [],
-                drew_at: null
+                lineWidth:  this.setting.lineWidth,
+                color:      this.setting.color,
+                eraser:     this.setting.eraser,
+                location:   [],
+                drew_at:    null
             };
         },
         drawStart( e ) {
             this.ctx.lineWidth   = this.setting.lineWidth;
             this.ctx.strokeStyle = this.setting.color;
+
+            this.ctx.globalCompositeOperation = !this.setting.eraser ? 'source-over' : 'destination-out';
 
             const x = e.offsetX;
             const y = e.offsetY;
@@ -80,12 +84,11 @@ export default {
             this.history.lineWidth = this.setting.lineWidth;
             this.history.color     = this.setting.color;
             this.history.drew_at   = Date.now();
-            console.log(this.history);
         }
     },
     mounted() {
         this.canvas = document.querySelector('#myCanvas');
-        this.ctx = this.canvas.getContext('2d');
+        this.ctx    = this.canvas.getContext('2d');
         this.ctx.lineCap     = 'round';
         this.ctx.lineJoin    = 'round';
         this.ctx.lineWidth   = this.setting.lineWidth;

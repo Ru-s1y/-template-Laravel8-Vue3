@@ -24326,7 +24326,8 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     setting: {
       color: String,
-      lineWidth: Number
+      lineWidth: Number,
+      eraser: Boolean
     }
   },
   watch: {
@@ -24353,6 +24354,7 @@ __webpack_require__.r(__webpack_exports__);
       return {
         lineWidth: this.setting.lineWidth,
         color: this.setting.color,
+        eraser: this.setting.eraser,
         location: [],
         drew_at: null
       };
@@ -24360,6 +24362,7 @@ __webpack_require__.r(__webpack_exports__);
     drawStart: function drawStart(e) {
       this.ctx.lineWidth = this.setting.lineWidth;
       this.ctx.strokeStyle = this.setting.color;
+      this.ctx.globalCompositeOperation = !this.setting.eraser ? 'source-over' : 'destination-out';
       var x = e.offsetX;
       var y = e.offsetY;
       this.ctx.beginPath();
@@ -24384,7 +24387,6 @@ __webpack_require__.r(__webpack_exports__);
       this.history.lineWidth = this.setting.lineWidth;
       this.history.color = this.setting.color;
       this.history.drew_at = Date.now();
-      console.log(this.history);
     }
   },
   mounted: function mounted() {
@@ -24418,13 +24420,20 @@ var __default__ = {
     return {
       setting: {
         color: '#000',
-        lineWidth: 3
+        lineWidth: '3',
+        eraser: false
       }
     };
   },
   methods: {
     setColor: function setColor(color) {
       this.setting.color = color;
+    },
+    setLineWidth: function setLineWidth(width) {
+      this.setting.lineWidth = width;
+    },
+    switchEraser: function switchEraser(checked) {
+      this.setting.eraser = checked;
     }
   }
 };
@@ -24450,10 +24459,10 @@ var __default__ = {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&lang=js":
-/*!*********************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&lang=js ***!
-  \*********************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&setup=true&lang=js":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&setup=true&lang=js ***!
+  \********************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -24461,7 +24470,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
+/* harmony import */ var _Tool_colorTool_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Tool/colorTool.vue */ "./resources/js/Pages/Canvas/Tool/colorTool.vue");
+/* harmony import */ var _Tool_lineWidthTool_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Tool/lineWidthTool.vue */ "./resources/js/Pages/Canvas/Tool/lineWidthTool.vue");
+/* harmony import */ var _Tool_eraserTool_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Tool/eraserTool.vue */ "./resources/js/Pages/Canvas/Tool/eraserTool.vue");
+var __default__ = {
+  methods: {
+    setColor: function setColor(color) {
+      this.$emit('setColor', color);
+    },
+    setLineWidth: function setLineWidth(lineWidth) {
+      this.$emit('setLineWidth', lineWidth);
+    },
+    switchEraser: function switchEraser(checked) {
+      this.$emit('switchEraser', checked);
+    }
+  }
+};
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/Object.assign(__default__, {
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var __returned__ = {
+      ColorTool: _Tool_colorTool_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+      LineWidthTool: _Tool_lineWidthTool_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+      EraserTool: _Tool_eraserTool_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+}));
 
 /***/ }),
 
@@ -28480,6 +28523,111 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/Tool/colorTool.vue?vue&type=template&id=47106e42":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/Tool/colorTool.vue?vue&type=template&id=47106e42 ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+
+var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "color"
+}, "線色", -1
+/* HOISTED */
+);
+
+function render(_ctx, _cache) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    id: "color",
+    type: "color",
+    onChange: _cache[0] || (_cache[0] = function ($event) {
+      return _ctx.$emit('setColor', $event.target.value);
+    })
+  }, null, 32
+  /* HYDRATE_EVENTS */
+  ), _hoisted_1]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/Tool/eraserTool.vue?vue&type=template&id=3524bf2d":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/Tool/eraserTool.vue?vue&type=template&id=3524bf2d ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+
+var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "eraser-checked"
+}, " 消しゴム", -1
+/* HOISTED */
+);
+
+function render(_ctx, _cache) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    id: "eraser-checked",
+    type: "checkbox",
+    onChange: _cache[0] || (_cache[0] = function ($event) {
+      return _ctx.$emit('switchEraser', $event.target.checked);
+    })
+  }, null, 32
+  /* HYDRATE_EVENTS */
+  ), _hoisted_1]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/Tool/lineWidthTool.vue?vue&type=template&id=360e0691":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/Tool/lineWidthTool.vue?vue&type=template&id=360e0691 ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+
+var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "lineWidth"
+}, " 線幅", -1
+/* HOISTED */
+);
+
+function render(_ctx, _cache) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    id: "lineWidth",
+    type: "range",
+    value: "3",
+    min: "1",
+    max: "5",
+    onChange: _cache[0] || (_cache[0] = function ($event) {
+      return _ctx.$emit('setLineWidth', $event.target.value);
+    })
+  }, null, 32
+  /* HYDRATE_EVENTS */
+  ), _hoisted_1]);
+}
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasContainer.vue?vue&type=template&id=58f4d73b&scoped=true":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasContainer.vue?vue&type=template&id=58f4d73b&scoped=true ***!
@@ -28546,10 +28694,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ToolContainer"], {
         color: _ctx.setting.color,
-        onSetColor: $options.setColor
+        onSetColor: $options.setColor,
+        onSetLineWidth: $options.setLineWidth,
+        onSwitchEraser: $options.switchEraser
       }, null, 8
       /* PROPS */
-      , ["color", "onSetColor"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CanvasContainer"], {
+      , ["color", "onSetColor", "onSetLineWidth", "onSwitchEraser"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CanvasContainer"], {
         setting: _ctx.setting
       }, null, 8
       /* PROPS */
@@ -28585,14 +28735,19 @@ var _hoisted_1 = {
   "class": "flex toolbox"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    type: "color",
-    onChange: _cache[0] || (_cache[0] = function ($event) {
-      return _ctx.$emit('setColor', $event.target.value);
-    })
-  }, null, 32
-  /* HYDRATE_EVENTS */
-  )]);
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ColorTool"], {
+    onSetColor: $options.setColor
+  }, null, 8
+  /* PROPS */
+  , ["onSetColor"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["LineWidthTool"], {
+    onSetLineWidth: $options.setLineWidth
+  }, null, 8
+  /* PROPS */
+  , ["onSetLineWidth"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["EraserTool"], {
+    onSwitchEraser: $options.switchEraser
+  }, null, 8
+  /* PROPS */
+  , ["onSwitchEraser"])]);
 }
 
 /***/ }),
@@ -66259,6 +66414,84 @@ if (false) {}
 
 /***/ }),
 
+/***/ "./resources/js/Pages/Canvas/Tool/colorTool.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/Pages/Canvas/Tool/colorTool.vue ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _colorTool_vue_vue_type_template_id_47106e42__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./colorTool.vue?vue&type=template&id=47106e42 */ "./resources/js/Pages/Canvas/Tool/colorTool.vue?vue&type=template&id=47106e42");
+/* harmony import */ var _var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+const script = {}
+
+;
+const __exports__ = /*#__PURE__*/(0,_var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(script, [['render',_colorTool_vue_vue_type_template_id_47106e42__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Canvas/Tool/colorTool.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Canvas/Tool/eraserTool.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/Pages/Canvas/Tool/eraserTool.vue ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _eraserTool_vue_vue_type_template_id_3524bf2d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./eraserTool.vue?vue&type=template&id=3524bf2d */ "./resources/js/Pages/Canvas/Tool/eraserTool.vue?vue&type=template&id=3524bf2d");
+/* harmony import */ var _var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+const script = {}
+
+;
+const __exports__ = /*#__PURE__*/(0,_var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(script, [['render',_eraserTool_vue_vue_type_template_id_3524bf2d__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Canvas/Tool/eraserTool.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Canvas/Tool/lineWidthTool.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/Pages/Canvas/Tool/lineWidthTool.vue ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _lineWidthTool_vue_vue_type_template_id_360e0691__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lineWidthTool.vue?vue&type=template&id=360e0691 */ "./resources/js/Pages/Canvas/Tool/lineWidthTool.vue?vue&type=template&id=360e0691");
+/* harmony import */ var _var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+const script = {}
+
+;
+const __exports__ = /*#__PURE__*/(0,_var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(script, [['render',_lineWidthTool_vue_vue_type_template_id_360e0691__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/Canvas/Tool/lineWidthTool.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
 /***/ "./resources/js/Pages/Canvas/canvasContainer.vue":
 /*!*******************************************************!*\
   !*** ./resources/js/Pages/Canvas/canvasContainer.vue ***!
@@ -66330,7 +66563,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _toolContainer_vue_vue_type_template_id_3356c97b_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toolContainer.vue?vue&type=template&id=3356c97b&scoped=true */ "./resources/js/Pages/Canvas/toolContainer.vue?vue&type=template&id=3356c97b&scoped=true");
-/* harmony import */ var _toolContainer_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toolContainer.vue?vue&type=script&lang=js */ "./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&lang=js");
+/* harmony import */ var _toolContainer_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toolContainer.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&setup=true&lang=js");
 /* harmony import */ var _toolContainer_vue_vue_type_style_index_0_id_3356c97b_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./toolContainer.vue?vue&type=style&index=0&id=3356c97b&scoped=true&lang=css */ "./resources/js/Pages/Canvas/toolContainer.vue?vue&type=style&index=0&id=3356c97b&scoped=true&lang=css");
 /* harmony import */ var _var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
@@ -66340,7 +66573,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_toolContainer_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_toolContainer_vue_vue_type_template_id_3356c97b_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-3356c97b"],['__file',"resources/js/Pages/Canvas/toolContainer.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_toolContainer_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_toolContainer_vue_vue_type_template_id_3356c97b_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-3356c97b"],['__file',"resources/js/Pages/Canvas/toolContainer.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -67316,18 +67549,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&lang=js":
-/*!*****************************************************************************!*\
-  !*** ./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&lang=js ***!
-  \*****************************************************************************/
+/***/ "./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&setup=true&lang=js":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&setup=true&lang=js ***!
+  \****************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_toolContainer_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_toolContainer_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_toolContainer_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./toolContainer.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_toolContainer_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./toolContainer.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/toolContainer.vue?vue&type=script&setup=true&lang=js");
  
 
 /***/ }),
@@ -68164,6 +68397,54 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Pages/Canvas/Tool/colorTool.vue?vue&type=template&id=47106e42":
+/*!************************************************************************************!*\
+  !*** ./resources/js/Pages/Canvas/Tool/colorTool.vue?vue&type=template&id=47106e42 ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_colorTool_vue_vue_type_template_id_47106e42__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_colorTool_vue_vue_type_template_id_47106e42__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./colorTool.vue?vue&type=template&id=47106e42 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/Tool/colorTool.vue?vue&type=template&id=47106e42");
+
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Canvas/Tool/eraserTool.vue?vue&type=template&id=3524bf2d":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/Pages/Canvas/Tool/eraserTool.vue?vue&type=template&id=3524bf2d ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_eraserTool_vue_vue_type_template_id_3524bf2d__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_eraserTool_vue_vue_type_template_id_3524bf2d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./eraserTool.vue?vue&type=template&id=3524bf2d */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/Tool/eraserTool.vue?vue&type=template&id=3524bf2d");
+
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Canvas/Tool/lineWidthTool.vue?vue&type=template&id=360e0691":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/Pages/Canvas/Tool/lineWidthTool.vue?vue&type=template&id=360e0691 ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_lineWidthTool_vue_vue_type_template_id_360e0691__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_lineWidthTool_vue_vue_type_template_id_360e0691__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./lineWidthTool.vue?vue&type=template&id=360e0691 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/Tool/lineWidthTool.vue?vue&type=template&id=360e0691");
+
+
+/***/ }),
+
 /***/ "./resources/js/Pages/Canvas/canvasContainer.vue?vue&type=template&id=58f4d73b&scoped=true":
 /*!*************************************************************************************************!*\
   !*** ./resources/js/Pages/Canvas/canvasContainer.vue?vue&type=template&id=58f4d73b&scoped=true ***!
@@ -68737,6 +69018,9 @@ var map = {
 	"./Auth/ResetPassword.vue": "./resources/js/Pages/Auth/ResetPassword.vue",
 	"./Auth/TwoFactorChallenge.vue": "./resources/js/Pages/Auth/TwoFactorChallenge.vue",
 	"./Auth/VerifyEmail.vue": "./resources/js/Pages/Auth/VerifyEmail.vue",
+	"./Canvas/Tool/colorTool.vue": "./resources/js/Pages/Canvas/Tool/colorTool.vue",
+	"./Canvas/Tool/eraserTool.vue": "./resources/js/Pages/Canvas/Tool/eraserTool.vue",
+	"./Canvas/Tool/lineWidthTool.vue": "./resources/js/Pages/Canvas/Tool/lineWidthTool.vue",
 	"./Canvas/canvasContainer.vue": "./resources/js/Pages/Canvas/canvasContainer.vue",
 	"./Canvas/container.vue": "./resources/js/Pages/Canvas/container.vue",
 	"./Canvas/toolContainer.vue": "./resources/js/Pages/Canvas/toolContainer.vue",
