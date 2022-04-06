@@ -58,8 +58,8 @@ export default {
             };
         },
         // 消しゴム機能チェックで切り替え
-        checkEraser() {
-            this.ctx.globalCompositeOperation = !this.setting.eraser ? 'source-over' : 'destination-out';
+        checkEraser(eraserFlg) {
+            this.ctx.globalCompositeOperation = !eraserFlg ? 'source-over' : 'destination-out';
         },
         // canvasをクリアする
         clearCanvas() {
@@ -69,8 +69,7 @@ export default {
         drawStart( e ) {
             this.ctx.lineWidth   = this.setting.lineWidth;
             this.ctx.strokeStyle = this.setting.color;
-
-            this.checkEraser();
+            this.checkEraser(this.setting.eraser);
 
             const x = e.offsetX;
             const y = e.offsetY;
@@ -100,6 +99,7 @@ export default {
         pushStash() {
             this.stash.lineWidth = this.setting.lineWidth;
             this.stash.color     = this.setting.color;
+            this.stash.eraser    = this.setting.eraser;
             this.stash.drew_at   = Date.now();
             // ajax送信
         },
@@ -111,7 +111,7 @@ export default {
                 this.ctx.beginPath();
                 this.ctx.lineWidth   = temp.lineWidth;
                 this.ctx.strokeStyle = temp.color;
-                this.checkEraser();
+                this.checkEraser(temp.eraser);
                 temp.location.forEach((location) => {
                     this.ctx.lineTo(location[0], location[1]);
                     this.ctx.stroke();

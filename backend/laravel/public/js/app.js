@@ -24367,8 +24367,8 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     // 消しゴム機能チェックで切り替え
-    checkEraser: function checkEraser() {
-      this.ctx.globalCompositeOperation = !this.setting.eraser ? 'source-over' : 'destination-out';
+    checkEraser: function checkEraser(eraserFlg) {
+      this.ctx.globalCompositeOperation = !eraserFlg ? 'source-over' : 'destination-out';
     },
     // canvasをクリアする
     clearCanvas: function clearCanvas() {
@@ -24378,7 +24378,7 @@ __webpack_require__.r(__webpack_exports__);
     drawStart: function drawStart(e) {
       this.ctx.lineWidth = this.setting.lineWidth;
       this.ctx.strokeStyle = this.setting.color;
-      this.checkEraser();
+      this.checkEraser(this.setting.eraser);
       var x = e.offsetX;
       var y = e.offsetY;
       this.ctx.beginPath();
@@ -24405,13 +24405,13 @@ __webpack_require__.r(__webpack_exports__);
     pushStash: function pushStash() {
       this.stash.lineWidth = this.setting.lineWidth;
       this.stash.color = this.setting.color;
+      this.stash.eraser = this.setting.eraser;
       this.stash.drew_at = Date.now(); // ajax送信
     },
     // ログから絵を描画する
     drawHistory: function drawHistory() {
       var _this = this;
 
-      console.log("イベント発火");
       this.clearCanvas();
       if (this.history.length == 0) return;
       this.history.forEach(function (temp, index) {
@@ -24420,7 +24420,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.ctx.lineWidth = temp.lineWidth;
         _this.ctx.strokeStyle = temp.color;
 
-        _this.checkEraser();
+        _this.checkEraser(temp.eraser);
 
         temp.location.forEach(function (location) {
           _this.ctx.lineTo(location[0], location[1]);
