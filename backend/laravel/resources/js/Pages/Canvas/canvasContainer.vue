@@ -28,9 +28,13 @@ export default {
         },
         isDrag( flg ) {
             if (flg) return;
-            if (this.history.location.length > 0)
-                this.pushHistory();
-            this.history = this.setEmpty();
+            if (this.stash.location.length > 0)
+            {
+                this.pushStash();
+                this.history.push(this.stash);
+                this.drawHistory();
+            }
+            this.stash = this.setEmpty();
         }
     },
     data: function () {
@@ -39,7 +43,8 @@ export default {
             ctx:    null,
             isDrag: false,
             lastPosition: [],
-            history: this.setEmpty()
+            history: [],
+            stash: this.setEmpty()
         }
     },
     methods: {
@@ -52,11 +57,20 @@ export default {
                 drew_at:    null
             };
         },
+        // 消しゴム機能チェックで切り替え
+        checkEraser() {
+            this.ctx.globalCompositeOperation = !this.setting.eraser ? 'source-over' : 'destination-out';
+        },
+        // canvasをクリアする
+        clearCanvas() {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        },
+        // 描画開始
         drawStart( e ) {
             this.ctx.lineWidth   = this.setting.lineWidth;
             this.ctx.strokeStyle = this.setting.color;
 
-            this.ctx.globalCompositeOperation = !this.setting.eraser ? 'source-over' : 'destination-out';
+            this.checkEraser();
 
             const x = e.offsetX;
             const y = e.offsetY;
@@ -65,25 +79,45 @@ export default {
             this.ctx.lineTo( x, y );
             this.ctx.stroke();
             this.isDrag = true;
-            this.history.location.push([x, y]);
+            this.stash.location.push([x, y]);
         },
+        // 描画中
         draw( e ) {
             const x = e.offsetX;
             const y = e.offsetY;
             if (!this.isDrag) return;
 
-            this.history.location.push([x, y]);
+            this.stash.location.push([x, y]);
             this.ctx.lineTo( x, y );
             this.ctx.stroke();
         },
+        // 描画終了
         drawEnd( e ) {
             this.ctx.closePath();
             this.isDrag = false;
         },
-        pushHistory() {
-            this.history.lineWidth = this.setting.lineWidth;
-            this.history.color     = this.setting.color;
-            this.history.drew_at   = Date.now();
+        // 直近のログを送信する
+        pushStash() {
+            this.stash.lineWidth = this.setting.lineWidth;
+            this.stash.color     = this.setting.color;
+            this.stash.drew_at   = Date.now();
+            // ajax送信
+        },
+        // ログから絵を描画する
+        drawHistory() {
+            this.clearCanvas();
+            if (this.history.length == 0) return;
+            this.history.forEach((temp, index) => {
+                this.ctx.beginPath();
+                this.ctx.lineWidth   = temp.lineWidth;
+                this.ctx.strokeStyle = temp.color;
+                this.checkEraser();
+                temp.location.forEach((location) => {
+                    this.ctx.lineTo(location[0], location[1]);
+                    this.ctx.stroke();
+                });
+                this.ctx.closePath();
+            });
         }
     },
     mounted() {

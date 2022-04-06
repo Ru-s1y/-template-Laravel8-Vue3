@@ -24336,8 +24336,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     isDrag: function isDrag(flg) {
       if (flg) return;
-      if (this.history.location.length > 0) this.pushHistory();
-      this.history = this.setEmpty();
+
+      if (this.stash.location.length > 0) {
+        this.pushStash();
+        this.history.push(this.stash);
+        this.drawHistory();
+      }
+
+      this.stash = this.setEmpty();
     }
   },
   data: function data() {
@@ -24346,7 +24352,8 @@ __webpack_require__.r(__webpack_exports__);
       ctx: null,
       isDrag: false,
       lastPosition: [],
-      history: this.setEmpty()
+      history: [],
+      stash: this.setEmpty()
     };
   },
   methods: {
@@ -24359,34 +24366,70 @@ __webpack_require__.r(__webpack_exports__);
         drew_at: null
       };
     },
+    // 消しゴム機能チェックで切り替え
+    checkEraser: function checkEraser() {
+      this.ctx.globalCompositeOperation = !this.setting.eraser ? 'source-over' : 'destination-out';
+    },
+    // canvasをクリアする
+    clearCanvas: function clearCanvas() {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    // 描画開始
     drawStart: function drawStart(e) {
       this.ctx.lineWidth = this.setting.lineWidth;
       this.ctx.strokeStyle = this.setting.color;
-      this.ctx.globalCompositeOperation = !this.setting.eraser ? 'source-over' : 'destination-out';
+      this.checkEraser();
       var x = e.offsetX;
       var y = e.offsetY;
       this.ctx.beginPath();
       this.ctx.lineTo(x, y);
       this.ctx.stroke();
       this.isDrag = true;
-      this.history.location.push([x, y]);
+      this.stash.location.push([x, y]);
     },
+    // 描画中
     draw: function draw(e) {
       var x = e.offsetX;
       var y = e.offsetY;
       if (!this.isDrag) return;
-      this.history.location.push([x, y]);
+      this.stash.location.push([x, y]);
       this.ctx.lineTo(x, y);
       this.ctx.stroke();
     },
+    // 描画終了
     drawEnd: function drawEnd(e) {
       this.ctx.closePath();
       this.isDrag = false;
     },
-    pushHistory: function pushHistory() {
-      this.history.lineWidth = this.setting.lineWidth;
-      this.history.color = this.setting.color;
-      this.history.drew_at = Date.now();
+    // 直近のログを送信する
+    pushStash: function pushStash() {
+      this.stash.lineWidth = this.setting.lineWidth;
+      this.stash.color = this.setting.color;
+      this.stash.drew_at = Date.now(); // ajax送信
+    },
+    // ログから絵を描画する
+    drawHistory: function drawHistory() {
+      var _this = this;
+
+      console.log("イベント発火");
+      this.clearCanvas();
+      if (this.history.length == 0) return;
+      this.history.forEach(function (temp, index) {
+        _this.ctx.beginPath();
+
+        _this.ctx.lineWidth = temp.lineWidth;
+        _this.ctx.strokeStyle = temp.color;
+
+        _this.checkEraser();
+
+        temp.location.forEach(function (location) {
+          _this.ctx.lineTo(location[0], location[1]);
+
+          _this.ctx.stroke();
+        });
+
+        _this.ctx.closePath();
+      });
     }
   },
   mounted: function mounted() {
