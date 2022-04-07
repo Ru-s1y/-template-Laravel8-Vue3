@@ -20,7 +20,8 @@ export default {
             color: String,
             lineWidth: Number,
             eraser: Boolean
-        }
+        },
+        roomId: Number
     },
     watch: {
         setting( newSetting ) {
@@ -35,6 +36,14 @@ export default {
                 this.drawHistory();
             }
             this.stash = this.setEmpty();
+        },
+        roomId() {
+            console.log('roomId is watch');
+            this.getHistory();
+            this.drawHistory();
+        },
+        history() {
+            this.drawHistory();
         }
     },
     data: function () {
@@ -102,6 +111,13 @@ export default {
             this.stash.eraser    = this.setting.eraser;
             this.stash.drew_at   = Date.now();
             // ajax送信
+            axios.post('/canvas/room/' + this.roomId + '/history', { stash: this.stash }
+            ).then(response => {
+                // 差分だけ送られてくる仕様に変わる予定
+                this.history = response.data;
+            }).catch(error => {
+                console.log(error);
+            });
         },
         // ログから絵を描画する
         drawHistory() {
@@ -118,6 +134,16 @@ export default {
                 });
                 this.ctx.closePath();
             });
+        },
+        // サーバー上のログを取得する
+        getHistory() {
+            if (this.roomId === undefined) return;
+            axios.get('/canvas/room/' + this.roomId + '/history')
+            .then(response => {
+                this.history = response.data;
+            }).catch(error => {
+                console.log(error);
+            })
         }
     },
     mounted() {
@@ -127,6 +153,7 @@ export default {
         this.ctx.lineJoin    = 'round';
         this.ctx.lineWidth   = this.setting.lineWidth;
         this.ctx.strokeStyle = this.setting.color;
+        this.getHistory();
     }
 }
 </script>

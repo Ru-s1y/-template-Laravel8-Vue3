@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CanvasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,8 +53,6 @@ Route::middleware('auth:sanctum')->get('/chat/rooms', [ChatController::class, 'r
 Route::middleware('auth:sanctum')->get('/chat/room/{roomId}/messages', [ChatController::class, 'messages']);
 Route::middleware('auth:sanctum')->post('/chat/room/{roomId}/messages', [ChatController::class, 'newMessage']);
 
-// Route::middleware('auth:sanctum')->group(['prefix' => 'chat'], function () {
-//     Route::get('rooms', 'ChatController@rooms');
-//     Route::get('room/{roomId}/messages', 'ChatController@messages');
-//     Route::post('room/{roomId}/messages', 'ChatController@newMessage');
-// });
+Route::middleware('auth:sanctum')->get('/canvas/rooms', [CanvasController::class, 'rooms']);
+Route::middleware('auth:sanctum')->get('/canvas/room/{roomId}/history', [CanvasController::class, 'history']);
+Route::middleware('auth:sanctum')->post('/canvas/room/{roomId}/history', [CanvasController::class, 'updateHistory']);

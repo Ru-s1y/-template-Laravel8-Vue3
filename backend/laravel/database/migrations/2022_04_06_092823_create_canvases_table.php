@@ -15,7 +15,7 @@ class CreateCanvasesTable extends Migration
     {
         Schema::create('canvases', function (Blueprint $table) {
             $table->id();
-            $table->integer('canvas_room_id');
+            $table->integer('canvas_room_id')->unique();
             $table->json('canvas_history');
             $table->timestamps();
         });

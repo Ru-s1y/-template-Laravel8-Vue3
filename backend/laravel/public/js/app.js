@@ -24328,7 +24328,8 @@ __webpack_require__.r(__webpack_exports__);
       color: String,
       lineWidth: Number,
       eraser: Boolean
-    }
+    },
+    roomId: Number
   },
   watch: {
     setting: function setting(newSetting) {
@@ -24344,6 +24345,14 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.stash = this.setEmpty();
+    },
+    roomId: function roomId() {
+      console.log('roomId is watch');
+      this.getHistory();
+      this.drawHistory();
+    },
+    history: function history() {
+      this.drawHistory();
     }
   },
   data: function data() {
@@ -24403,32 +24412,54 @@ __webpack_require__.r(__webpack_exports__);
     },
     // 直近のログを送信する
     pushStash: function pushStash() {
+      var _this = this;
+
       this.stash.lineWidth = this.setting.lineWidth;
       this.stash.color = this.setting.color;
       this.stash.eraser = this.setting.eraser;
       this.stash.drew_at = Date.now(); // ajax送信
+
+      axios.post('/canvas/room/' + this.roomId + '/history', {
+        stash: this.stash
+      }).then(function (response) {
+        // 差分だけ送られてくる仕様に変わる予定
+        _this.history = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
     },
     // ログから絵を描画する
     drawHistory: function drawHistory() {
-      var _this = this;
+      var _this2 = this;
 
       this.clearCanvas();
       if (this.history.length == 0) return;
       this.history.forEach(function (temp, index) {
-        _this.ctx.beginPath();
+        _this2.ctx.beginPath();
 
-        _this.ctx.lineWidth = temp.lineWidth;
-        _this.ctx.strokeStyle = temp.color;
+        _this2.ctx.lineWidth = temp.lineWidth;
+        _this2.ctx.strokeStyle = temp.color;
 
-        _this.checkEraser(temp.eraser);
+        _this2.checkEraser(temp.eraser);
 
         temp.location.forEach(function (location) {
-          _this.ctx.lineTo(location[0], location[1]);
+          _this2.ctx.lineTo(location[0], location[1]);
 
-          _this.ctx.stroke();
+          _this2.ctx.stroke();
         });
 
-        _this.ctx.closePath();
+        _this2.ctx.closePath();
+      });
+    },
+    // サーバー上のログを取得する
+    getHistory: function getHistory() {
+      var _this3 = this;
+
+      if (this.roomId === undefined) return;
+      axios.get('/canvas/room/' + this.roomId + '/history').then(function (response) {
+        _this3.history = response.data;
+      })["catch"](function (error) {
+        console.log(error);
       });
     }
   },
@@ -24439,6 +24470,32 @@ __webpack_require__.r(__webpack_exports__);
     this.ctx.lineJoin = 'round';
     this.ctx.lineWidth = this.setting.lineWidth;
     this.ctx.strokeStyle = this.setting.color;
+    this.getHistory();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=script&lang=js":
+/*!***************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=script&lang=js ***!
+  \***************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['rooms', 'currentRoom'],
+  data: function data() {
+    return {
+      selected: ''
+    };
+  },
+  created: function created() {
+    this.selected = this.currentRoom;
   }
 });
 
@@ -24458,6 +24515,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout.vue */ "./resources/js/Layouts/AppLayout.vue");
 /* harmony import */ var _canvasContainer_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./canvasContainer.vue */ "./resources/js/Pages/Canvas/canvasContainer.vue");
 /* harmony import */ var _toolContainer_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./toolContainer.vue */ "./resources/js/Pages/Canvas/toolContainer.vue");
+/* harmony import */ var _canvasRoomSelection_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./canvasRoomSelection.vue */ "./resources/js/Pages/Canvas/canvasRoomSelection.vue");
 var __default__ = {
   data: function data() {
     return {
@@ -24465,10 +24523,26 @@ var __default__ = {
         color: '#000',
         lineWidth: '3',
         eraser: false
-      }
+      },
+      canvasRooms: [],
+      currentRoom: []
     };
   },
   methods: {
+    getRooms: function getRooms() {
+      var _this = this;
+
+      axios.get('/canvas/rooms').then(function (response) {
+        console.log(response.data);
+        _this.canvasRooms = response.data;
+        _this.currentRoom = response.data[0];
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    setRoom: function setRoom(room) {
+      this.currentRoom = room;
+    },
     setColor: function setColor(color) {
       this.setting.color = color;
     },
@@ -24478,8 +24552,12 @@ var __default__ = {
     switchEraser: function switchEraser(checked) {
       this.setting.eraser = checked;
     }
+  },
+  created: function created() {
+    this.getRooms();
   }
 };
+
 
 
 
@@ -24490,7 +24568,8 @@ var __default__ = {
     var __returned__ = {
       AppLayout: _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
       CanvasContainer: _canvasContainer_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-      ToolContainer: _toolContainer_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+      ToolContainer: _toolContainer_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+      CanvasRoomSelection: _canvasRoomSelection_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -28582,7 +28661,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "color"
-}, "線色", -1
+}, " 線色", -1
 /* HOISTED */
 );
 
@@ -28717,6 +28796,53 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=template&id=292c88ab&scoped=true":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=template&id=292c88ab&scoped=true ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+
+var _withScopeId = function _withScopeId(n) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.pushScopeId)("data-v-292c88ab"), n = n(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.popScopeId)(), n;
+};
+
+var _hoisted_1 = {
+  "class": "grid grid-clos-2 side-padding"
+};
+var _hoisted_2 = ["value"];
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+    "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+      return _ctx.selected = $event;
+    }),
+    onChange: _cache[1] || (_cache[1] = function ($event) {
+      return _ctx.$emit('roomchanged', _ctx.selected);
+    }),
+    "class": "float-right"
+  }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.rooms, function (room, index) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
+      key: index,
+      value: room
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(room.name), 9
+    /* TEXT, PROPS */
+    , _hoisted_2);
+  }), 128
+  /* KEYED_FRAGMENT */
+  ))], 544
+  /* HYDRATE_EVENTS, NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.selected]])])]);
+}
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/container.vue?vue&type=template&id=2afa8933":
 /*!*********************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/container.vue?vue&type=template&id=2afa8933 ***!
@@ -28735,7 +28861,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     title: "Dashboard"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ToolContainer"], {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_ctx.currentRoom.id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["CanvasRoomSelection"], {
+        key: 0,
+        rooms: _ctx.canvasRooms,
+        currentRoom: _ctx.currentRoom,
+        onRoomchanged: _cache[0] || (_cache[0] = function ($event) {
+          return $options.setRoom($event);
+        })
+      }, null, 8
+      /* PROPS */
+      , ["rooms", "currentRoom"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ToolContainer"], {
         color: _ctx.setting.color,
         onSetColor: $options.setColor,
         onSetLineWidth: $options.setLineWidth,
@@ -28743,10 +28878,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, null, 8
       /* PROPS */
       , ["color", "onSetColor", "onSetLineWidth", "onSwitchEraser"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CanvasContainer"], {
-        setting: _ctx.setting
+        setting: _ctx.setting,
+        roomId: _ctx.currentRoom.id
       }, null, 8
       /* PROPS */
-      , ["setting"])];
+      , ["setting", "roomId"])];
     }),
     _: 1
     /* STABLE */
@@ -35430,6 +35566,30 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "\n.canvas-container[data-v-58f4d73b] {\n    background-color: gray;\n    margin: 0;\n    height: 80vh;\n}\n.outer[data-v-58f4d73b] {\n    position: relative;\n}\n.canvas[data-v-58f4d73b] {\n    background-color: #fff;\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    margin: auto;\n}\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.side-padding[data-v-292c88ab] {\n    padding: 0.5em 1em;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -65070,6 +65230,36 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_canvasRoomSelection_vue_vue_type_style_index_0_id_292c88ab_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_canvasRoomSelection_vue_vue_type_style_index_0_id_292c88ab_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_canvasRoomSelection_vue_vue_type_style_index_0_id_292c88ab_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/toolContainer.vue?vue&type=style&index=0&id=3356c97b&scoped=true&lang=css":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/toolContainer.vue?vue&type=style&index=0&id=3356c97b&scoped=true&lang=css ***!
@@ -66566,6 +66756,37 @@ if (false) {}
 
 /***/ }),
 
+/***/ "./resources/js/Pages/Canvas/canvasRoomSelection.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/Pages/Canvas/canvasRoomSelection.vue ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _canvasRoomSelection_vue_vue_type_template_id_292c88ab_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./canvasRoomSelection.vue?vue&type=template&id=292c88ab&scoped=true */ "./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=template&id=292c88ab&scoped=true");
+/* harmony import */ var _canvasRoomSelection_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./canvasRoomSelection.vue?vue&type=script&lang=js */ "./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=script&lang=js");
+/* harmony import */ var _canvasRoomSelection_vue_vue_type_style_index_0_id_292c88ab_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css */ "./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css");
+/* harmony import */ var _var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+
+
+const __exports__ = /*#__PURE__*/(0,_var_www_html_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_canvasRoomSelection_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_canvasRoomSelection_vue_vue_type_template_id_292c88ab_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-292c88ab"],['__file',"resources/js/Pages/Canvas/canvasRoomSelection.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
 /***/ "./resources/js/Pages/Canvas/container.vue":
 /*!*************************************************!*\
   !*** ./resources/js/Pages/Canvas/container.vue ***!
@@ -67576,6 +67797,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=script&lang=js":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=script&lang=js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_canvasRoomSelection_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_canvasRoomSelection_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./canvasRoomSelection.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=script&lang=js");
+ 
+
+/***/ }),
+
 /***/ "./resources/js/Pages/Canvas/container.vue?vue&type=script&setup=true&lang=js":
 /*!************************************************************************************!*\
   !*** ./resources/js/Pages/Canvas/container.vue?vue&type=script&setup=true&lang=js ***!
@@ -68504,6 +68741,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=template&id=292c88ab&scoped=true":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=template&id=292c88ab&scoped=true ***!
+  \*****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_canvasRoomSelection_vue_vue_type_template_id_292c88ab_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_canvasRoomSelection_vue_vue_type_template_id_292c88ab_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./canvasRoomSelection.vue?vue&type=template&id=292c88ab&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=template&id=292c88ab&scoped=true");
+
+
+/***/ }),
+
 /***/ "./resources/js/Pages/Canvas/container.vue?vue&type=template&id=2afa8933":
 /*!*******************************************************************************!*\
   !*** ./resources/js/Pages/Canvas/container.vue?vue&type=template&id=2afa8933 ***!
@@ -68789,6 +69042,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css":
+/*!*******************************************************************************************************************!*\
+  !*** ./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css ***!
+  \*******************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_canvasRoomSelection_vue_vue_type_style_index_0_id_292c88ab_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Canvas/canvasRoomSelection.vue?vue&type=style&index=0&id=292c88ab&scoped=true&lang=css");
+
+
+/***/ }),
+
 /***/ "./resources/js/Pages/Canvas/toolContainer.vue?vue&type=style&index=0&id=3356c97b&scoped=true&lang=css":
 /*!*************************************************************************************************************!*\
   !*** ./resources/js/Pages/Canvas/toolContainer.vue?vue&type=style&index=0&id=3356c97b&scoped=true&lang=css ***!
@@ -69065,6 +69331,7 @@ var map = {
 	"./Canvas/Tool/eraserTool.vue": "./resources/js/Pages/Canvas/Tool/eraserTool.vue",
 	"./Canvas/Tool/lineWidthTool.vue": "./resources/js/Pages/Canvas/Tool/lineWidthTool.vue",
 	"./Canvas/canvasContainer.vue": "./resources/js/Pages/Canvas/canvasContainer.vue",
+	"./Canvas/canvasRoomSelection.vue": "./resources/js/Pages/Canvas/canvasRoomSelection.vue",
 	"./Canvas/container.vue": "./resources/js/Pages/Canvas/container.vue",
 	"./Canvas/toolContainer.vue": "./resources/js/Pages/Canvas/toolContainer.vue",
 	"./Chat/chatRoomSelection.vue": "./resources/js/Pages/Chat/chatRoomSelection.vue",

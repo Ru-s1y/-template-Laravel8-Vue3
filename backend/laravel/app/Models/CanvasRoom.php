@@ -9,6 +9,11 @@ class CanvasRoom extends Model
 {
     use HasFactory;
 
+    protected $hidden = [
+        'user_id',
+        'password'
+    ];
+
     public function canvas()
     {
         return $this->hasOne('App\Models\Canvas', 'canvas_room_id', 'id');
