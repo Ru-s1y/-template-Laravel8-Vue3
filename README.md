@@ -1,4 +1,4 @@
-# Laravel8 + Vue3 環境構築セット
+# リアルタイムお絵描き(Beta版)
 
 ||||
 |--|--|--|
@@ -7,38 +7,12 @@
 |MySQL|8.0||
 |NGINX|1.21.6||
 
+Pusher
+Laravel Echo
+
 ## 環境構築
 
-### Dockerfile, docker-compose.ymlだけ使いたい場合
-
-```
-$ docker-compose up -d
-```
-
-bashで入ってlaravel8のインストールする
-```
-$ docker-compose exec php bash
-```
-
-多分`backend/laravel/laravel`になってるわ
-階層上げといて! `backend/laravel`
-
-```
-# composer create-project laravel/laravel:^8.0 .
-# npm install && npm run dev
-```
-
-```
-# composer require laravel/ui
-# php artisan ui vue --auth
-# php artisan migrate
-```
-
-```
-# npm install && npm run dev
-```
-
-### git cloneする場合
+### git cloneしてきて
 ```
 $ docker compose up -d
 ```
