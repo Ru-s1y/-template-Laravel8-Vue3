@@ -23,6 +23,9 @@ import CanvasRoomSelection from './canvasRoomSelection.vue';
         <canvas-container
             :setting="setting"
             :roomId="currentRoom.id"
+            :history="history"
+            v-on:setHistory="setHistory"
+            v-on:pushHistory="pushHistory"
             ref="canvas" />
     </AppLayout>
 </template>
@@ -47,16 +50,20 @@ export default {
                 this.disconnect( oldVal );
             }
             this.connect();
+        },
+        history() {
+            this.$refs.canvas.drawHistory();
         }
     },
     methods: {
         connect() {
             if ( !this.currentRoom.id ) return;
             let vm = this;
-            this.$refs.canvas.getHistory();
+            this.getHistory();
             window.Echo.private( "canvas." + this.currentRoom.id )
             .listen('.canvas.new', e => {
-                vm.$refs.canvas.getHistory();
+                vm.pushHistory( e.stash );
+                vm.$refs.canvas.drawHistory(); // watchで変更が検知できてないため記載
             });
         },
         disconnect( room ) {
@@ -74,6 +81,21 @@ export default {
         },
         setRoom( room ) {
             this.currentRoom = room;
+        },
+        getHistory() {
+            if (this.roomId === undefined) return;
+            axios.get('/canvas/room/' + this.roomId + '/history')
+            .then(response => {
+                this.setHistory( response.data );
+            }).catch(error => {
+                console.log(error);
+            })
+        },
+        setHistory( history ) {
+            this.history = history;
+        },
+        pushHistory( stash ) {
+            this.history.push( stash );
         },
         setColor( color ) {
             this.setting.color = color;
