@@ -21,26 +21,22 @@ export default {
             lineWidth: Number,
             eraser: Boolean
         },
-        roomId: Number
+        roomId: Number,
+        history: Array
     },
     watch: {
         setting( newSetting ) {
             this.setting = newSetting;
         },
         isDrag( flg ) {
-            if (flg) return;
-            if (this.stash.location.length > 0)
-            {
+            if ( flg ) return;
+            if ( this.stash.location.length > 0 ) {
                 this.pushStash();
-                this.history.push(this.stash);
-                this.drawHistory();
             }
             this.stash = this.setEmpty();
         },
         roomId() {
-            console.log('roomId is watch');
             this.getHistory();
-            this.drawHistory();
         },
         history() {
             this.drawHistory();
@@ -52,7 +48,6 @@ export default {
             ctx:    null,
             isDrag: false,
             lastPosition: [],
-            history: [],
             stash: this.setEmpty()
         }
     },
@@ -67,12 +62,12 @@ export default {
             };
         },
         // 消しゴム機能チェックで切り替え
-        checkEraser(eraserFlg) {
+        checkEraser( eraserFlg ) {
             this.ctx.globalCompositeOperation = !eraserFlg ? 'source-over' : 'destination-out';
         },
         // canvasをクリアする
         clearCanvas() {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.clearRect( 0, 0, this.canvas.width, this.canvas.height );
         },
         // 描画開始
         drawStart( e ) {
@@ -91,10 +86,9 @@ export default {
         },
         // 描画中
         draw( e ) {
+            if ( !this.isDrag ) return;
             const x = e.offsetX;
             const y = e.offsetY;
-            if (!this.isDrag) return;
-
             this.stash.location.push([x, y]);
             this.ctx.lineTo( x, y );
             this.ctx.stroke();
@@ -113,8 +107,7 @@ export default {
             // ajax送信
             axios.post('/canvas/room/' + this.roomId + '/history', { stash: this.stash }
             ).then(response => {
-                // 差分だけ送られてくる仕様に変わる予定
-                this.history = response.data;
+                this.$emit('pushHistory', this.stash );
             }).catch(error => {
                 console.log(error);
             });
@@ -122,13 +115,13 @@ export default {
         // ログから絵を描画する
         drawHistory() {
             this.clearCanvas();
-            if (this.history.length == 0) return;
-            this.history.forEach((temp, index) => {
+            if ( this.history.length == 0 ) return;
+            this.history.forEach(( temp, index ) => {
                 this.ctx.beginPath();
                 this.ctx.lineWidth   = temp.lineWidth;
                 this.ctx.strokeStyle = temp.color;
                 this.checkEraser(temp.eraser);
-                temp.location.forEach((location) => {
+                temp.location.forEach(( location ) => {
                     this.ctx.lineTo(location[0], location[1]);
                     this.ctx.stroke();
                 });
@@ -137,10 +130,10 @@ export default {
         },
         // サーバー上のログを取得する
         getHistory() {
-            if (this.roomId === undefined) return;
-            axios.get('/canvas/room/' + this.roomId + '/history')
+            if ( this.roomId === undefined ) return;
+            axios.get('/canvas/room/' + this.roomId + '/history' )
             .then(response => {
-                this.history = response.data;
+                this.$emit("setHistory", response.data );
             }).catch(error => {
                 console.log(error);
             })

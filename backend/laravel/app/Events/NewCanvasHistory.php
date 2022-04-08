@@ -9,23 +9,23 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Canvas;
 
-class Message implements ShouldBroadcast
+class NewCanvasHistory implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $username;
-    public $message;
-
+    public $canvas;
+    public $stash;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($username, $message)
+    public function __construct( Canvas $canvas, $stash )
     {
-        $this->username;
-        $this->message;
+        $this->canvas = $canvas;
+        $this->stash  = $stash;
     }
 
     /**
@@ -35,11 +35,18 @@ class Message implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chat');
+        return new PrivateChannel('canvas.'. $this->canvas->canvas_room_id );
     }
 
     public function broadcastAs()
     {
-        return 'message';
+        return 'canvas.new';
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            'stash' => $this->stash
+        ];
     }
 }

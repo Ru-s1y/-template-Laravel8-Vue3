@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CanvasRoom;
 use App\Models\Canvas;
+use App\Events\NewCanvasHistory;
 
 class CanvasController extends Controller
 {
@@ -32,7 +33,8 @@ class CanvasController extends Controller
     {
         $stash = $request->input('stash');
         $history = $this->canvas->updateHistory($roomId, $stash);
-        return json_decode($history->toArray()['canvas_history']);
-        // return;
+
+        broadcast(new NewCanvasHistory( $history, $stash ))->toOthers();
+        return;
     }
 }

@@ -22,7 +22,11 @@ import CanvasRoomSelection from './canvasRoomSelection.vue';
             v-on:switchEraser="switchEraser" />
         <canvas-container
             :setting="setting"
-            :roomId="currentRoom.id" />
+            :roomId="currentRoom.id"
+            :history="history"
+            v-on:setHistory="setHistory"
+            v-on:pushHistory="pushHistory"
+            ref="canvas" />
     </AppLayout>
 </template>
 
@@ -36,14 +40,38 @@ export default {
                 eraser: false
             },
             canvasRooms: [],
-            currentRoom: []
+            currentRoom: [],
+            history: []
+        }
+    },
+    watch: {
+        currentRoom( val, oldVal ) {
+            if ( oldVal.id ) {
+                this.disconnect( oldVal );
+            }
+            this.connect();
+        },
+        history() {
+            this.$refs.canvas.drawHistory();
         }
     },
     methods: {
+        connect() {
+            if ( !this.currentRoom.id ) return;
+            let vm = this;
+            this.getHistory();
+            window.Echo.private( "canvas." + this.currentRoom.id )
+            .listen('.canvas.new', e => {
+                vm.pushHistory( e.stash );
+                vm.$refs.canvas.drawHistory(); // watchで変更が検知できてないため記載
+            });
+        },
+        disconnect( room ) {
+            window.Echo.leave("canvas." + room.id );
+        },
         getRooms() {
             axios.get('/canvas/rooms')
             .then(response => {
-                console.log(response.data);
                 this.canvasRooms = response.data;
                 this.currentRoom = response.data[0];
             })
@@ -54,6 +82,21 @@ export default {
         setRoom( room ) {
             this.currentRoom = room;
         },
+        getHistory() {
+            if (this.roomId === undefined) return;
+            axios.get('/canvas/room/' + this.roomId + '/history')
+            .then(response => {
+                this.setHistory( response.data );
+            }).catch(error => {
+                console.log(error);
+            })
+        },
+        setHistory( history ) {
+            this.history = history;
+        },
+        pushHistory( stash ) {
+            this.history.push( stash );
+        },
         setColor( color ) {
             this.setting.color = color;
         },
@@ -62,7 +105,7 @@ export default {
         },
         switchEraser( checked ) {
             this.setting.eraser = checked;
-        }
+        },
     },
     created() {
         this.getRooms();
