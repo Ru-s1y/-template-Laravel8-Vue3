@@ -24340,16 +24340,12 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.stash.location.length > 0) {
         this.pushStash();
-        this.history.push(this.stash);
-        this.drawHistory();
       }
 
       this.stash = this.setEmpty();
     },
     roomId: function roomId() {
-      console.log('roomId is watch');
       this.getHistory();
-      this.drawHistory();
     },
     history: function history() {
       this.drawHistory();
@@ -24422,8 +24418,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/canvas/room/' + this.roomId + '/history', {
         stash: this.stash
       }).then(function (response) {
-        // 差分だけ送られてくる仕様に変わる予定
-        _this.history = response.data;
+        _this.getHistory();
       })["catch"](function (error) {
         console.log(error);
       });
@@ -24525,15 +24520,35 @@ var __default__ = {
         eraser: false
       },
       canvasRooms: [],
-      currentRoom: []
+      currentRoom: [],
+      history: []
     };
   },
+  watch: {
+    currentRoom: function currentRoom(val, oldVal) {
+      if (oldVal.id) {
+        this.disconnect(oldVal);
+      }
+
+      this.connect();
+    }
+  },
   methods: {
+    connect: function connect() {
+      if (!this.currentRoom.id) return;
+      var vm = this;
+      this.$refs.canvas.getHistory();
+      window.Echo["private"]("canvas." + this.currentRoom.id).listen('.canvas.new', function (e) {
+        vm.$refs.canvas.getHistory();
+      });
+    },
+    disconnect: function disconnect(room) {
+      window.Echo.leave("canvas." + room.id);
+    },
     getRooms: function getRooms() {
       var _this = this;
 
       axios.get('/canvas/rooms').then(function (response) {
-        console.log(response.data);
         _this.canvasRooms = response.data;
         _this.currentRoom = response.data[0];
       })["catch"](function (error) {
@@ -28879,7 +28894,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* PROPS */
       , ["color", "onSetColor", "onSetLineWidth", "onSwitchEraser"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CanvasContainer"], {
         setting: _ctx.setting,
-        roomId: _ctx.currentRoom.id
+        roomId: _ctx.currentRoom.id,
+        ref: "canvas"
       }, null, 8
       /* PROPS */
       , ["setting", "roomId"])];

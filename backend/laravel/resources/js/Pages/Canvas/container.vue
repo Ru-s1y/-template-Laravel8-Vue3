@@ -22,7 +22,8 @@ import CanvasRoomSelection from './canvasRoomSelection.vue';
             v-on:switchEraser="switchEraser" />
         <canvas-container
             :setting="setting"
-            :roomId="currentRoom.id" />
+            :roomId="currentRoom.id"
+            ref="canvas" />
     </AppLayout>
 </template>
 
@@ -36,14 +37,34 @@ export default {
                 eraser: false
             },
             canvasRooms: [],
-            currentRoom: []
+            currentRoom: [],
+            history: []
+        }
+    },
+    watch: {
+        currentRoom( val, oldVal ) {
+            if ( oldVal.id ) {
+                this.disconnect( oldVal );
+            }
+            this.connect();
         }
     },
     methods: {
+        connect() {
+            if ( !this.currentRoom.id ) return;
+            let vm = this;
+            this.$refs.canvas.getHistory();
+            window.Echo.private( "canvas." + this.currentRoom.id )
+            .listen('.canvas.new', e => {
+                vm.$refs.canvas.getHistory();
+            });
+        },
+        disconnect( room ) {
+            window.Echo.leave("canvas." + room.id );
+        },
         getRooms() {
             axios.get('/canvas/rooms')
             .then(response => {
-                console.log(response.data);
                 this.canvasRooms = response.data;
                 this.currentRoom = response.data[0];
             })
@@ -62,7 +83,7 @@ export default {
         },
         switchEraser( checked ) {
             this.setting.eraser = checked;
-        }
+        },
     },
     created() {
         this.getRooms();

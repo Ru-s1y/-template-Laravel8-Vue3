@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,12 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('chat.{roomId}', function ($user, $roomId) {
+    if ( Auth::check() ) {
+        return ['id' => $user->id, 'name' => $user->name];
+    }
+});
+
+Broadcast::channel('canvas.{roomId}', function ($user, $roomId) {
     if ( Auth::check() ) {
         return ['id' => $user->id, 'name' => $user->name];
     }

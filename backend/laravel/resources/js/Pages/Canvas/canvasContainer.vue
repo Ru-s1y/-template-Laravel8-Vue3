@@ -29,18 +29,13 @@ export default {
         },
         isDrag( flg ) {
             if (flg) return;
-            if (this.stash.location.length > 0)
-            {
+            if (this.stash.location.length > 0) {
                 this.pushStash();
-                this.history.push(this.stash);
-                this.drawHistory();
             }
             this.stash = this.setEmpty();
         },
         roomId() {
-            console.log('roomId is watch');
             this.getHistory();
-            this.drawHistory();
         },
         history() {
             this.drawHistory();
@@ -113,8 +108,7 @@ export default {
             // ajax送信
             axios.post('/canvas/room/' + this.roomId + '/history', { stash: this.stash }
             ).then(response => {
-                // 差分だけ送られてくる仕様に変わる予定
-                this.history = response.data;
+                this.getHistory();
             }).catch(error => {
                 console.log(error);
             });
