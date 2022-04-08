@@ -55,6 +55,9 @@ const logout = () => {
                                 <JetNavLink :href="route('chat')" :active="route().current('chat')">
                                     Chat
                                 </JetNavLink>
+                                <JetNavLink :href="route('canvas')" :active="route().current('canvas')">
+                                    Canvas
+                                </JetNavLink>
                             </div>
                         </div>
 
@@ -216,6 +219,9 @@ const logout = () => {
                         </JetResponsiveNavLink>
                         <JetResponsiveNavLink :href="route('chat')" :active="route().current('chat')">
                             Chat
+                        </JetResponsiveNavLink>
+                        <JetResponsiveNavLink :href="route('canvas')" :active="route().current('canvas')">
+                            Canvas
                         </JetResponsiveNavLink>
                     </div>
 
