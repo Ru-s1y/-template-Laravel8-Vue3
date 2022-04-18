@@ -8,6 +8,7 @@ import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
+import TitleLog from '../components/TitleLogoWrapper.vue';
 
 defineProps({
     title: String,
@@ -43,7 +44,8 @@ const logout = () => {
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <JetApplicationMark class="block h-9 w-auto" />
+                                    <!-- <JetApplicationMark class="block h-9 w-auto" /> -->
+                                    <TitleLog />
                                 </Link>
                             </div>
 
