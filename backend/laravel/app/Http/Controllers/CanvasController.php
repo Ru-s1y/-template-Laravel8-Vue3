@@ -25,8 +25,11 @@ class CanvasController extends Controller
 
     public function history(Request $request, $roomId)
     {
-        $history = $this->canvas->getHistory($roomId)->toArray();
-        return json_decode($history['canvas_history']);
+        $history = $this->canvas->getHistory($roomId);
+        if ($history) {
+            return json_decode($history->toArray()['canvas_history']);
+        }
+        return [];
     }
 
     public function updateHistory(Request $request, $roomId)
