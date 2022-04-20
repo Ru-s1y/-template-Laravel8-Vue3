@@ -49,10 +49,16 @@ Route::middleware([
     })->name('canvas');
 });
 
-Route::middleware('auth:sanctum')->get('/chat/rooms', [ChatController::class, 'rooms']);
-Route::middleware('auth:sanctum')->get('/chat/room/{roomId}/messages', [ChatController::class, 'messages']);
-Route::middleware('auth:sanctum')->post('/chat/room/{roomId}/messages', [ChatController::class, 'newMessage']);
-
-Route::middleware('auth:sanctum')->get('/canvas/rooms', [CanvasController::class, 'rooms']);
-Route::middleware('auth:sanctum')->get('/canvas/room/{roomId}/history', [CanvasController::class, 'history']);
-Route::middleware('auth:sanctum')->post('/canvas/room/{roomId}/history', [CanvasController::class, 'updateHistory']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('chat')->group(function () {
+        Route::get('/rooms', [ChatController::class, 'rooms']);
+        Route::get('/room/{roomId}/messages', [ChatController::class, 'messages']);
+        Route::post('/room/{roomId}/messages', [ChatController::class, 'newMessage']);
+    });
+    Route::prefix('canvas')->group(function () {
+        Route::get('rooms', [CanvasController::class, 'rooms']);
+        Route::get('room/{roomId}/history', [CanvasController::class, 'history']);
+        Route::post('room', [CanvasController::class, 'createRoom']);
+        Route::post('room/{roomId}/history', [CanvasController::class, 'updateHistory']);
+    });
+});

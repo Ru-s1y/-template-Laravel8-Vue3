@@ -18,15 +18,15 @@ library.add(
                 <FontAwesomeIcon icon="xmark" @click="toggleModal()" class="w-8 h-8 text-gray-500 hover:text-gray-300 text-right" />
             </div>
             <h1>Create New Room</h1>
-            <form>
+            <div>
                 <div class="mb-6">
                     <label for="room-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                         Room name
                     </label>
-                    <input name="room-name" type="text" placeholder="Room name" required>
+                    <input name="room-name" v-model="name" type="text" placeholder="Room name" required>
                 </div>
-                <button type="submit" @click="createRoom()" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 submit-button">Submit</button>
-            </form>
+                <button @click="createRoom()" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 submit-button">Submit</button>
+            </div>
         </div>
     </div>
 </div>
@@ -36,16 +36,24 @@ library.add(
 export default {
     data: function() {
         return {
-            show: false
+            show: false,
+            name: ''
         }
     },
     methods: {
         toggleModal() {
             this.show = !this.show;
         },
-        createRoom( e ) {
-            console.log("make room: " + e.target.value);
-            this.toggleModal();
+        createRoom() {
+            axios.post('/canvas/room', {
+                name: this.name
+            }).then(response => {
+                this.$emit('roomChange', response.data);
+                this.name = '';
+                this.toggleModal();
+            }).catch(error => {
+                console.log(error);
+            })
         }
     }
 }
