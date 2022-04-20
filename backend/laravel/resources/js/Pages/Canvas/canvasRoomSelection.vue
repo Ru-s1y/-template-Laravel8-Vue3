@@ -1,10 +1,16 @@
+<script setup>
+import CreateRoomButton from '../Canvas/Menu/createRoomButton.vue';
+</script>
+
 <template>
-    <div class="grid grid-clos-2 side-padding">
-        <div>
+    <div class="flex flex-row justify-end items-end side-padding ">
+        <div class="flex-item">
+            <CreateRoomButton />
+        </div>
+        <div class="flex-item">
             <select
                 v-model="selected"
                 @change="$emit('roomchanged', selected)"
-                class="float-right"
             >
                 <option
                     v-for="(room, index) in rooms"
@@ -19,7 +25,6 @@
 </template>
 
 <script>
-
 export default {
     props: ['rooms', 'currentRoom'],
     data: function() {
@@ -36,5 +41,8 @@ export default {
 <style scoped>
 .side-padding {
     padding: 0.5em 1em;
+}
+.flex-item {
+    padding-left: 1em;
 }
 </style>
