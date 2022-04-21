@@ -21,6 +21,7 @@ import CanvasRoomSelection from './canvasRoomSelection.vue';
             v-on:setLineWidth="setLineWidth"
             v-on:switchEraser="switchEraser" />
         <canvas-container
+            v-if="currentRoom.id"
             :setting="setting"
             :roomId="currentRoom.id"
             :history="history"
@@ -73,13 +74,16 @@ export default {
             axios.get('/canvas/rooms')
             .then(response => {
                 this.canvasRooms = response.data;
-                this.currentRoom = response.data[0];
+                if (!this.currentRoom.id) {
+                    this.currentRoom = response.data[0];
+                }
             })
             .catch(error => {
                 console.log(error);
             })
         },
         setRoom( room ) {
+            this.getRooms()
             this.currentRoom = room;
         },
         getHistory() {

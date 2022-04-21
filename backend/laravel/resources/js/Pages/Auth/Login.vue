@@ -7,6 +7,7 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import AuthPageLogoWrapper from '../../components/AuthPageLogoWrapper.vue'
 
 defineProps({
     canResetPassword: Boolean,
@@ -34,7 +35,8 @@ const submit = () => {
 
     <JetAuthenticationCard>
         <template #logo>
-            <JetAuthenticationCardLogo />
+            <!-- <JetAuthenticationCardLogo /> -->
+            <AuthPageLogoWrapper />
         </template>
 
         <JetValidationErrors class="mb-4" />

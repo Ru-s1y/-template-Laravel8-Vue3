@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\CanvasRoom;
 use App\Models\Canvas;
 use App\Events\NewCanvasHistory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CanvasController extends Controller
 {
@@ -23,10 +24,22 @@ class CanvasController extends Controller
         return $this->canvasRoom->select(['id', 'name'])->get();
     }
 
+    public function createRoom(Request $request)
+    {
+        $store = [
+            'user_id' => Auth::id(),
+            'name' => $request->input('name'),
+        ];
+        return $this->canvasRoom->create($store);
+    }
+
     public function history(Request $request, $roomId)
     {
-        $history = $this->canvas->getHistory($roomId)->toArray();
-        return json_decode($history['canvas_history']);
+        $history = $this->canvas->getHistory($roomId);
+        if ($history) {
+            return json_decode($history->toArray()['canvas_history']);
+        }
+        return [];
     }
 
     public function updateHistory(Request $request, $roomId)

@@ -5,7 +5,7 @@ WORKDIR /var/www/html
 
 RUN apt-get update
 RUN apt-get install -y vim
-RUN apt-get install -y git
+RUN apt-get install -y git curl
 RUN apt-get install -y zip unzip
 RUN docker-php-ext-install pdo_mysql
 

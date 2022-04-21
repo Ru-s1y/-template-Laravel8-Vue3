@@ -9,6 +9,11 @@ class CanvasRoom extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'name'
+    ];
+
     protected $hidden = [
         'user_id',
         'password'
