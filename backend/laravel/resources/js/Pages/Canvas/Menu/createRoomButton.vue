@@ -13,19 +13,21 @@ library.add(
 <div>
     <FontAwesomeIcon @click="toggleModal()" icon="circle-plus" class="w-8 h-8 text-blue-600 hover:text-sky-500" />
     <div v-if="show" id="roomModal" class="modal">
-        <div class="modal-content">
-            <div>
-                <FontAwesomeIcon icon="xmark" @click="toggleModal()" class="w-8 h-8 text-gray-500 hover:text-gray-300 text-right" />
-            </div>
-            <h1>Create New Room</h1>
-            <div>
-                <div class="mb-6">
-                    <label for="room-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Room name
-                    </label>
-                    <input name="room-name" v-model="name" type="text" placeholder="Room name" required>
+        <div class="modal-container">
+            <div class="modal-content">
+                <div class="close-btn-container">
+                    <FontAwesomeIcon icon="xmark" @click="toggleModal()" class="w-8 h-8 text-gray-500 hover:text-gray-300 text-right" />
                 </div>
-                <button @click="createRoom()" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 submit-button">Submit</button>
+                <h1>Create New Room</h1>
+                <div>
+                    <div class="mb-6">
+                        <label for="room-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                            Room name
+                        </label>
+                        <input name="room-name" v-model="name" type="text" placeholder="Room name" required>
+                    </div>
+                    <button @click="createRoom()" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 submit-button">Submit</button>
+                </div>
             </div>
         </div>
     </div>
@@ -67,16 +69,21 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 5rem;
-    text-align: center;
     background-color: rgba(108, 122, 137, 0.4);
 }
-.modal-content {
-    padding: 5rem;
+.modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
-    width: 100%;
+}
+.modal-content {
+    padding: 2rem 3.5rem;
     background-color: #fff;
     border-radius: 2rem;
+}
+.close-btn-container {
+    text-align: end;
 }
 .submit-button {
     display: inline-block;
