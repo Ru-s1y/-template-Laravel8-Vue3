@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Article extends Model
@@ -31,11 +32,24 @@ class Article extends Model
 
     public function getAll()
     {
-        return $this->where('public', true)->orderBy('updated_at', 'DESC');
+        return $this->where('public', true)
+                    ->with('user:id,name')
+                    ->orderBy('updated_at', 'DESC')
+                    ->get();
     }
 
     public function getMyArticles()
     {
-        return $this->where('user_id', Auth::id())->orderBy('updated_at', 'DESC');
+        return $this->where('user_id', Auth::id())
+                    ->orderBy('updated_at', 'DESC')
+                    ->get();
+    }
+
+    public function retrieve( $articleId )
+    {
+        return $this->where('id', Auth::id())
+                    ->where('public', true)
+                    ->with('user:id,name')
+                    ->get();
     }
 }

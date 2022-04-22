@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CanvasController;
+use App\Http\Controllers\ArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,9 +48,17 @@ Route::middleware([
     Route::get('/canvas', function () {
         return Inertia::render('Canvas/container');
     })->name('canvas');
+    Route::get('/article', function () {
+        return Inertia::render('Article/container');
+    })->name('article');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('article')->group(function () {
+        Route::get('/index', [ArticleController::class, 'articles']);
+        Route::get('/user', [ArticleController::class, 'myArticles']);
+        Route::get('/{articleId}', [ArticleController::class, 'show']);
+    });
     Route::prefix('chat')->group(function () {
         Route::get('/rooms', [ChatController::class, 'rooms']);
         Route::get('/room/{roomId}/messages', [ChatController::class, 'messages']);

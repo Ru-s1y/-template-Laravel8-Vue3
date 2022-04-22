@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Article;
+use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
@@ -14,13 +14,24 @@ class ArticleController extends Controller
         $this->article = $article;
     }
 
-    public function index()
+    public function articles()
     {
-        return $this->article->getAll()->get();
+        return $this->article
+                    ->getAll()
+                    ->toArray();
     }
 
-    public function myIndex()
+    public function myArticle()
     {
-        return $this->article->getMyAll()->get();
+        return $this->article
+                    ->getMyAll()
+                    ->toArray();
+    }
+
+    public function show(Request $request, $articleId)
+    {
+        return $this->article
+                    ->retrieve($articleId)
+                    ->toArray();
     }
 }

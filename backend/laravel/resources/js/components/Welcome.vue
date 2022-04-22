@@ -6,8 +6,28 @@
     <div>
         <div class="p-6 sm:px-20 bg-white border-b border-gray-200">
             <TitleLogo />
-            キュレーションサイト作っていくよ!<br>
-            ここがヘッダーになる予定
+            自分の最近の活動やこれからの実装について
+        </div>
+
+        <div v-for="task, index in tasks" :key="index">
+            <div class="mb-3 p-6 sm:px-20 bg-white border-b border-gray-200">
+                ● {{ task }}
+            </div>
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    data: function () {
+        return {
+            tasks: [
+                "記事のCRUD",
+                "記事ページの作成",
+                "キャンバスページの新規部屋作成機能実装",
+            ]
+        }
+    }
+}
+</script>
+
