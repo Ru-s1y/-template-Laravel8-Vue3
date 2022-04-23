@@ -9,7 +9,7 @@ library.add(
 </script>
 
 <template>
-    <div class="mr-2 mb-2 bg-white rounded-lg border shadow-md max-w-xs md:max-w-none overflow-hidden w-full">
+    <div class="article-board mr-2 mb-2 bg-white rounded-lg border shadow-md max-w-xs md:max-w-none overflow-hidden w-full">
         <div class="p-5">
             <div class="text-right">
                 <FontAwesomeIcon icon="xmark" @click="unsetSelected()" class="w-8 h-8 text-gray-500 hover:text-gray-300" />
@@ -25,12 +25,19 @@ library.add(
 </template>
 
 <script>
+import gsap from 'gsap';
 export default {
     props: ['selected'],
     methods: {
         unsetSelected() {
             this.$emit("setArticle", {});
         }
+    },
+    mounted() {
+        gsap.fromTo(".article-board",
+            { opacity: 0 },
+            { opacity: 1 }
+        )
     }
 }
 </script>
