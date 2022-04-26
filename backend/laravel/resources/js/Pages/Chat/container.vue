@@ -6,7 +6,7 @@ import chatRoomSelection from './chatRoomSelection.vue';
 </script>
 
 <template>
-    <AppLayout title="Dashboard">
+    <AppLayout title="Chat">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <chat-room-selection

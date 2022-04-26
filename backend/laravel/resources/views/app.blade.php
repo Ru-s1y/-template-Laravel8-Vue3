@@ -9,6 +9,17 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
+        <style>
+            @font-face {
+                font-family: myFirstFont;
+                src:url("/fonts/ja-jp.ttf");
+            }
+            .genshin-font{
+                font-family: myFirstFont;
+                color: #393b40;
+            }
+        </style>
+
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
@@ -17,7 +28,8 @@
         <script src="{{ mix('js/app.js') }}" defer></script>
         @inertiaHead
     </head>
-    <body class="font-sans antialiased">
+    {{-- <body class="font-sans antialiased"> --}}
+    <body class="genshin-font first-line:antialiased">
         @inertia
 
         @env ('local')

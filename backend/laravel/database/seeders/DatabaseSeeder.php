@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ChatRoomSeeder::class,
             CanvasRoomSeeder::class,
+            ArticleSeeder::class,
         ]);
     }
 }

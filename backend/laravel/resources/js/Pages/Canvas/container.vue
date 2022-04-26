@@ -6,7 +6,7 @@ import CanvasRoomSelection from './canvasRoomSelection.vue';
 </script>
 
 <template>
-    <AppLayout title="Dashboard">
+    <AppLayout title="Canvas">
         <div>
             <canvas-room-selection
                 v-if="currentRoom.id"

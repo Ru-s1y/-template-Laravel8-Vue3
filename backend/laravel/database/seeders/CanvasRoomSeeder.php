@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 class CanvasRoomSeeder extends Seeder
 {
+    public $count = 5;
+
     /**
      * Run the database seeds.
      *
@@ -14,14 +16,11 @@ class CanvasRoomSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('canvas_rooms')->insert([
-            'user_id' => 1,
-            'name' => 'canvas_1'
-        ]);
-
-        DB::table('canvas_rooms')->insert([
-            'user_id' => 1,
-            'name' => 'canvas_2'
-        ]);
+        for ($i = 1; $i <= $this->count; $i++) {
+            DB::table('canvas_rooms')->insert([
+                'user_id'   => mt_rand(1, 2),
+                'name'      => 'canvas_'.$i
+            ]);
+        }
     }
 }
