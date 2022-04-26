@@ -4,6 +4,13 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPaintbrush, faComment, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+import WelcomeLogo from '../components/WelcomeLogo.vue';
+import VersionInformation from '../components/Documents/VersionInformation.vue';
+import DocumentsCard from '../components/Documents/DocumentsCard.vue';
+import RealPaintCard from '../components/Documents/RealPaintCard.vue';
+import RealChatCard from '../components/Documents/RealChatCard.vue';
+import ArticleCard from '../components/Documents/ArticleCard.vue';
+
 library.add(
     faPaintbrush,
     faComment,
@@ -22,8 +29,8 @@ defineProps({
     <div>
         <Head title="Welcome" />
 
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
-            <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0 pb-5">
+            <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block bg-gray-100 dark:bg-gray-900 w-full text-right">
                 <Link v-if="$page.props.user" :href="route('dashboard')" class="text-sm text-gray-700 underline">
                     Dashboard
                 </Link>
@@ -39,10 +46,14 @@ defineProps({
                 </template>
             </div>
 
-            <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
-                    <p style="color: white; font-size: 96px">Welcome to MyPage</p>
+            <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 mt-10">
+                <div class="flex justify-center pt-8 sm:justify-center sm:pt-0">
+                    <p class="mt-2 text-gray-500" style="color: white; font-size: 96px">
+                        Welcome to MyPage
+                    </p>
                 </div>
+
+                <welcome-logo />
 
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                     <div class="ml-12 p-6">
@@ -51,32 +62,10 @@ defineProps({
                                 本ページはリアルタイム技術を使用したアプリケーションのサンプルポートフォリオです。
                                 使用技術は以下のとおりです。
                             </p>
-                            <table class="table-fixed">
-                                <thead>
-                                    <tr>
-                                        <th>使用技術</th>
-                                        <th>バージョン</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Laravel</td>
-                                        <td>v{{ laravelVersion }} (PHP v{{ phpVersion }})</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Vue.js</td>
-                                        <td>v3.2.31</td>
-                                    </tr>
-                                    <tr>
-                                        <td>MySQL</td>
-                                        <td>v8.0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Nginx</td>
-                                        <td>v1.21.6</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <version-information
+                                :laravelVersion="laravelVersion"
+                                :phpVersion="phpVersion"
+                            />
                             <p>※サンプルアプリケーションはユーザー登録をすることで利用できるようになります。</p>
                         </div>
                     </div>
@@ -85,71 +74,19 @@ defineProps({
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                     <div class="grid grid-cols-1 md:grid-cols-2">
                         <div class="p-6">
-                            <div class="flex items-center">
-                                <FontAwesomeIcon icon="newspaper" class="w-8 h-8 text-gray-500" />
-                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">
-                                    Documentation
-                                </div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    ブログというかキュレーションサイトみたいなのを作る予定
-                                </div>
-                            </div>
+                            <documents-card />
                         </div>
 
                         <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
-                            <div class="flex items-center">
-                                <FontAwesomeIcon icon="paintbrush" class="w-8 h-8 text-gray-500" />
-                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">
-                                    Real Time Paint
-                                </div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process.
-                                </div>
-                            </div>
+                            <real-chat-card />
                         </div>
 
                         <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center">
-                                <FontAwesomeIcon icon="comment" class="w-8 h-8 text-gray-500" />
-                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">
-                                    Real Time Chat
-                                </div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laravel News is a community driven portal and newsletter aggregating all of the latest and most important news in the Laravel ecosystem, including new package releases and tutorials.
-                                </div>
-                            </div>
+                            <real-paint-card />
                         </div>
 
                         <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
-                            <div class="flex items-center">
-                                <svg
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    viewBox="0 0 24 24"
-                                    class="w-8 h-8 text-gray-500"
-                                ><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">
-                                    Vibrant Ecosystem
-                                </div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laravel's robust library of first-party tools and libraries, such as <a href="https://forge.laravel.com" class="underline">Forge</a>, <a href="https://vapor.laravel.com" class="underline">Vapor</a>, <a href="https://nova.laravel.com" class="underline">Nova</a>, and <a href="https://envoyer.io" class="underline">Envoyer</a> help you take your projects to the next level. Pair them with powerful open source libraries like <a href="https://laravel.com/docs/billing" class="underline">Cashier</a>, <a href="https://laravel.com/docs/dusk" class="underline">Dusk</a>, <a href="https://laravel.com/docs/broadcasting" class="underline">Echo</a>, <a href="https://laravel.com/docs/horizon" class="underline">Horizon</a>, <a href="https://laravel.com/docs/sanctum" class="underline">Sanctum</a>, <a href="https://laravel.com/docs/telescope" class="underline">Telescope</a>, and more.
-                                </div>
-                            </div>
+                            <article-card />
                         </div>
                     </div>
                 </div>
