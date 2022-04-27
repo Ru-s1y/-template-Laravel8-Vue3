@@ -29,8 +29,8 @@ defineProps({
     <div>
         <Head title="Welcome" />
 
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0 pb-5">
-            <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block bg-gray-100 dark:bg-gray-900 w-full text-right">
+        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 sm:items-center sm:pt-0 pb-5">
+            <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block bg-gray-100 w-full text-right">
                 <Link v-if="$page.props.user" :href="route('dashboard')" class="text-sm text-gray-700 underline">
                     Dashboard
                 </Link>
@@ -48,17 +48,17 @@ defineProps({
 
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 mt-10">
                 <div class="flex justify-center pt-8 sm:justify-center sm:pt-0">
-                    <p class="mt-2 text-gray-500" style="color: white; font-size: 96px">
+                    <p class="mt-2 text-gray-600" style="font-size: 96px">
                         Welcome to MyPage
                     </p>
                 </div>
 
                 <welcome-logo />
 
-                <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+                <div class="mt-8 bg-white overflow-hidden shadow sm:rounded-lg">
                     <div class="ml-12 p-6">
-                        <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                            <p>
+                        <div class="mt-2 text-sm">
+                            <p class="text-gray-700">
                                 本ページはリアルタイム技術を使用したアプリケーションのサンプルポートフォリオです。
                                 使用技術は以下のとおりです。
                             </p>
@@ -66,26 +66,28 @@ defineProps({
                                 :laravelVersion="laravelVersion"
                                 :phpVersion="phpVersion"
                             />
-                            <p>※サンプルアプリケーションはユーザー登録をすることで利用できるようになります。</p>
+                            <p class="text-gray-700">
+                                ※サンプルアプリケーションはユーザー登録をすることで利用できるようになります。
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
-                    <div class="grid grid-cols-1 md:grid-cols-2">
+                <div class="mt-8 bg-white overflow-hidden shadow sm:rounded-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-2 kaisei-opti">
                         <div class="p-6">
                             <documents-card />
                         </div>
 
-                        <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
+                        <div class="p-6 border-t border-gray-200 md:border-t-0 md:border-l">
                             <real-chat-card />
                         </div>
 
-                        <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+                        <div class="p-6 border-t border-gray-200">
                             <real-paint-card />
                         </div>
 
-                        <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
+                        <div class="p-6 border-t border-gray-200 md:border-l">
                             <article-card />
                         </div>
                     </div>

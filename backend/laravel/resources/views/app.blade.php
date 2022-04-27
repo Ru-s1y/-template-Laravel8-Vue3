@@ -7,16 +7,30 @@
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+        <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti:wght@500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
 
         <style>
             @font-face {
                 font-family: myFirstFont;
                 src:url("/fonts/ja-jp.ttf");
             }
-            .genshin-font{
+            .genshin-font {
                 font-family: myFirstFont;
                 color: #393b40;
+            }
+            .kaisei-opti {
+                font-family: 'Kaisei Opti', serif;
+            }
+            .kaisei-decol {
+                font-family: 'Kaisei Decol', serif;
+            }
+            .abril-font {
+                font-family: 'Abril Fatface', cursive;
             }
         </style>
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <table class="table-fixed">
+        <table class="table-fixed text-gray-600">
             <thead>
                 <tr>
                     <th>使用技術</th>
