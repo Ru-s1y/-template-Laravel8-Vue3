@@ -6,6 +6,8 @@ import CanvasRoomSelection from './canvasRoomSelection.vue';
 import CanvasLists from './canvasLists.vue';
 import CanvasTitleHeader from './Menu/canvasTitleHeader.vue';
 import CreateRoomButton from './Menu/createRoomButton.vue';
+import PaginateFooter from './Menu/paginateFooter.vue';
+import { faTentArrowLeftRight } from '@fortawesome/free-solid-svg-icons';
 </script>
 
 <template>
@@ -21,6 +23,7 @@ import CreateRoomButton from './Menu/createRoomButton.vue';
                 :rooms="canvasRooms"
                 v-on:roomchanged="setRoom( $event )"
             />
+            <paginate-footer :links="pageLinks" v-on:pagechanged="changePage( $event )" />
         </div>
         <div v-else>
             <canvas-title-header
@@ -54,7 +57,10 @@ export default {
             },
             canvasRooms: [],
             currentRoom: [],
-            history: []
+            history: [],
+            currentPage: 1,
+            lastPage: 1,
+            pageLinks: []
         }
     },
     watch: {
@@ -82,10 +88,19 @@ export default {
         disconnect( room ) {
             window.Echo.leave("canvas." + room.id );
         },
+        changePage( page ) {
+            this.currentPage = page;
+            this.getRooms();
+        },
         getRooms() {
-            axios.get('/canvas/rooms')
+            axios.get('/canvas/rooms?page=' + this.currentPage)
             .then(response => {
-                this.canvasRooms = response.data;
+                this.canvasRooms = response.data.data;
+                this.currentPage = response.data.current_page;
+                this.lastPage = response.data.last_page;
+                this.pageLinks = response.data.links;
+                this.pageLinks.shift();
+                this.pageLinks.pop();
             })
             .catch(error => {
                 console.log(error);
@@ -125,3 +140,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.page-no:last-child {
+    margin-right: 0;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="py-12">
+    <div class="pt-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="text-center mb-2" v-for="(room, index) in rooms" :key="index">
                 <div class="grid grid-cols-4 gap-4 items-center p-3 rounded-md canvas-list">
@@ -28,7 +28,6 @@ export default {
 
 <style scoped>
 .canvas-list {
-    /* border: 1px solid black; */
     background-color: white;
 }
 .canvas-list:last-child {
