@@ -3,31 +3,35 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import CanvasContainer from './canvasContainer.vue';
 import ToolContainer from './toolContainer.vue';
 import CanvasRoomSelection from './canvasRoomSelection.vue';
+import CanvasLists from './canvasLists.vue';
+import CanvasTitleHeader from './Menu/canvasTitleHeader.vue';
 </script>
 
 <template>
     <AppLayout title="Canvas">
-        <div>
-            <canvas-room-selection
+        <canvas-lists
+            v-if="!currentRoom.id"
+            :rooms="canvasRooms"
+            v-on:roomchanged="setRoom( $event )"
+        />
+        <div v-else>
+            <canvas-title-header
+                :selected="currentRoom"
+                v-on:roomchanged="setRoom( $event )" />
+            <tool-container
+                v-bind:color="setting.color"
+                v-on:setColor="setColor"
+                v-on:setLineWidth="setLineWidth"
+                v-on:switchEraser="switchEraser" />
+            <canvas-container
                 v-if="currentRoom.id"
-                :rooms="canvasRooms"
-                :currentRoom="currentRoom"
-                v-on:roomchanged="setRoom( $event )"
-            />
+                :setting="setting"
+                :roomId="currentRoom.id"
+                :history="history"
+                v-on:setHistory="setHistory"
+                v-on:pushHistory="pushHistory"
+                ref="canvas" />
         </div>
-        <tool-container
-            v-bind:color="setting.color"
-            v-on:setColor="setColor"
-            v-on:setLineWidth="setLineWidth"
-            v-on:switchEraser="switchEraser" />
-        <canvas-container
-            v-if="currentRoom.id"
-            :setting="setting"
-            :roomId="currentRoom.id"
-            :history="history"
-            v-on:setHistory="setHistory"
-            v-on:pushHistory="pushHistory"
-            ref="canvas" />
     </AppLayout>
 </template>
 
@@ -74,16 +78,13 @@ export default {
             axios.get('/canvas/rooms')
             .then(response => {
                 this.canvasRooms = response.data;
-                if (!this.currentRoom.id) {
-                    this.currentRoom = response.data[0];
-                }
             })
             .catch(error => {
                 console.log(error);
             })
         },
         setRoom( room ) {
-            this.getRooms()
+            this.getRooms(); ///新規作成後の情報を取得したいため
             this.currentRoom = room;
         },
         getHistory() {
