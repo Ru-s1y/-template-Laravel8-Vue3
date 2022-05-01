@@ -11,7 +11,15 @@ library.add(
 
 <template>
 <div>
-    <FontAwesomeIcon @click="toggleModal()" icon="circle-plus" class="w-8 h-8 text-blue-600 hover:text-sky-500" />
+    <div class="bg-white rounded-md py-5 px-7">
+        <div>
+            <p class="text-gray-600 text-3xl">Canvas Selection</p>
+        </div>
+        <div class="flex items-center">
+            <p class="text-gray-600 ml-auto">新規作成&nbsp;→&nbsp;</p>
+            <FontAwesomeIcon @click="toggleModal()" icon="circle-plus" class="w-8 h-8 text-blue-600 hover:text-sky-500" />
+        </div>
+    </div>
     <div v-if="show" id="roomModal" class="modal">
         <div class="modal-container">
             <div class="modal-content">
@@ -50,8 +58,8 @@ export default {
             axios.post('/canvas/room', {
                 name: this.name
             }).then(response => {
-                this.$emit('roomChange', response.data);
                 this.name = '';
+                this.$emit('roomchanged', response.data);
                 this.toggleModal();
             }).catch(error => {
                 console.log(error);

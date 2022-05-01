@@ -5,15 +5,23 @@ import ToolContainer from './toolContainer.vue';
 import CanvasRoomSelection from './canvasRoomSelection.vue';
 import CanvasLists from './canvasLists.vue';
 import CanvasTitleHeader from './Menu/canvasTitleHeader.vue';
+import CreateRoomButton from './Menu/createRoomButton.vue';
 </script>
 
 <template>
     <AppLayout title="Canvas">
-        <canvas-lists
-            v-if="!currentRoom.id"
-            :rooms="canvasRooms"
-            v-on:roomchanged="setRoom( $event )"
-        />
+        <div v-if="!currentRoom.id">
+            <div class="pt-12">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <create-room-button
+                        v-on:roomchanged="setRoom( $event )" />
+                </div>
+            </div>
+            <canvas-lists
+                :rooms="canvasRooms"
+                v-on:roomchanged="setRoom( $event )"
+            />
+        </div>
         <div v-else>
             <canvas-title-header
                 :selected="currentRoom"

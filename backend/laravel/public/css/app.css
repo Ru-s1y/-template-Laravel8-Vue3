@@ -1593,6 +1593,10 @@ select {
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
 }
+.px-7 {
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+}
 .px-5 {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
@@ -1637,6 +1641,9 @@ select {
 .pb-5 {
   padding-bottom: 1.25rem;
 }
+.pt-12 {
+  padding-top: 3rem;
+}
 .text-left {
   text-align: left;
 }
@@ -1678,6 +1685,10 @@ select {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 .font-medium {
   font-weight: 500;
