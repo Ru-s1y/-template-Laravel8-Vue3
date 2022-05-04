@@ -5,8 +5,7 @@
             <div>
                 <span v-if="article.created_at" class="text-sm text-primary">{{ article.created_at }} </span>
                 <div>
-                    by
-                    <img class="w-5 h-5 rounded inline-block" :src="article.user.profile_photo_url" :alt="article.user.name">
+                    <img class="mr-1 w-5 h-5 rounded inline-block" :src="article.user.profile_photo_url" :alt="article.user.name">
                     {{ article.user.name }}
                 </div>
             </div>

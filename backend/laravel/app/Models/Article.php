@@ -22,7 +22,9 @@ class Article extends Model
     ];
 
     protected $hidden = [
-        'public'
+        'public',
+        'pivot',
+        'user_id'
     ];
 
     public function user()
@@ -30,9 +32,16 @@ class Article extends Model
         return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany('App\Models\Tag')
+                    ->withTimestamps();
+    }
+
     public function getAll()
     {
         return $this->where('public', true)
+                    ->with('tags:id,name')
                     ->with('user:id,name')
                     ->orderBy('updated_at', 'DESC')
                     ->get();
@@ -41,14 +50,16 @@ class Article extends Model
     public function getMyArticles()
     {
         return $this->where('user_id', Auth::id())
+                    ->with('tag:id,name')
                     ->orderBy('updated_at', 'DESC')
                     ->get();
     }
 
     public function retrieve( $articleId )
     {
-        return $this->where('id', Auth::id())
+        return $this->find(Auth::id())
                     ->where('public', true)
+                    ->with('tag:id,name')
                     ->with('user:id,name')
                     ->get();
     }

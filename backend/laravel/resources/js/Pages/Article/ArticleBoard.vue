@@ -16,10 +16,18 @@ library.add(
             </div>
             <h1>{{ selected.title }}</h1>
             <p>{{ selected.content }}</p>
-            <p>
-                {{ selected.created_at ? 'created_at' + selected.created_at : '' }}
-                by {{ selected.user.name }}
-            </p>
+            <div class="flex">
+                <img :src="selected.user.profile_photo_url" class="mr-1 w-5 h-5 rounded inline-block">
+                <span>{{ selected.user.name }}</span>
+            </div>
+            <p>{{ selected.created_at ? 'created_at' + selected.created_at : '' }}</p>
+            <div class="flex mt-2">
+                <div v-for="(tag, index) in selected.tags" :key="index" class="tag-card">
+                    <p class="py-1 px-2 text-white bg-sky-700 rounded-md">
+                        {{ tag.name }}
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -41,3 +49,12 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.tag-card {
+    margin-right: 0.5rem;
+}
+.tag-card:last-child {
+    margin-right: 0;
+}
+</style>

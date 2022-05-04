@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ArticleSeeder extends Seeder
 {
-    public $count = 8;
+    public $count = 15;
     /**
      * Run the database seeds.
      *
@@ -15,7 +15,7 @@ class ArticleSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i <= $this->count; $i++) {
+        for ($i = 0; $i < $this->count; $i++) {
             DB::table('articles')->insert([
                 'user_id'    => mt_rand(1, 2),
                 'title'      => '記事タイトルだよ_'.$i,
