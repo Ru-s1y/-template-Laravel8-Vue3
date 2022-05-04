@@ -9,6 +9,8 @@ class CanvasRoom extends Model
 {
     use HasFactory;
 
+    protected $perPage = 10; // overwrite
+
     protected $fillable = [
         'user_id',
         'name'
@@ -27,5 +29,12 @@ class CanvasRoom extends Model
     public function user()
     {
         return $this->hasOne('App\Models\User', 'id', 'user_id');
+    }
+
+
+    public function getRooms()
+    {
+        $result = $this->select(['id', 'name'])->paginate($this->perPage)->toArray();
+        return $result;
     }
 }

@@ -19,9 +19,10 @@ class CanvasController extends Controller
         $this->canvas = $canvas;
     }
 
-    public function rooms()
+    public function rooms(Request $request)
     {
-        return $this->canvasRoom->select(['id', 'name'])->get();
+        $page = $request->page;
+        return $this->canvasRoom->getRooms();
     }
 
     public function createRoom(Request $request)

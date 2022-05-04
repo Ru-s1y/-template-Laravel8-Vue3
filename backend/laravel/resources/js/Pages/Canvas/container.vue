@@ -3,31 +3,46 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import CanvasContainer from './canvasContainer.vue';
 import ToolContainer from './toolContainer.vue';
 import CanvasRoomSelection from './canvasRoomSelection.vue';
+import CanvasLists from './canvasLists.vue';
+import CanvasTitleHeader from './Menu/canvasTitleHeader.vue';
+import CreateRoomButton from './Menu/createRoomButton.vue';
+import PaginateFooter from './Menu/paginateFooter.vue';
+import { faTentArrowLeftRight } from '@fortawesome/free-solid-svg-icons';
 </script>
 
 <template>
     <AppLayout title="Canvas">
-        <div>
-            <canvas-room-selection
-                v-if="currentRoom.id"
+        <div v-if="!currentRoom.id">
+            <div class="pt-12">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <create-room-button
+                        v-on:roomchanged="setRoom( $event )" />
+                </div>
+            </div>
+            <canvas-lists
                 :rooms="canvasRooms"
-                :currentRoom="currentRoom"
                 v-on:roomchanged="setRoom( $event )"
             />
+            <paginate-footer :links="pageLinks" v-on:pagechanged="changePage( $event )" />
         </div>
-        <tool-container
-            v-bind:color="setting.color"
-            v-on:setColor="setColor"
-            v-on:setLineWidth="setLineWidth"
-            v-on:switchEraser="switchEraser" />
-        <canvas-container
-            v-if="currentRoom.id"
-            :setting="setting"
-            :roomId="currentRoom.id"
-            :history="history"
-            v-on:setHistory="setHistory"
-            v-on:pushHistory="pushHistory"
-            ref="canvas" />
+        <div v-else>
+            <canvas-title-header
+                :selected="currentRoom"
+                v-on:roomchanged="setRoom( $event )" />
+            <tool-container
+                v-bind:color="setting.color"
+                v-on:setColor="setColor"
+                v-on:setLineWidth="setLineWidth"
+                v-on:switchEraser="switchEraser" />
+            <canvas-container
+                v-if="currentRoom.id"
+                :setting="setting"
+                :roomId="currentRoom.id"
+                :history="history"
+                v-on:setHistory="setHistory"
+                v-on:pushHistory="pushHistory"
+                ref="canvas" />
+        </div>
     </AppLayout>
 </template>
 
@@ -42,7 +57,10 @@ export default {
             },
             canvasRooms: [],
             currentRoom: [],
-            history: []
+            history: [],
+            currentPage: 1,
+            lastPage: 1,
+            pageLinks: []
         }
     },
     watch: {
@@ -70,20 +88,26 @@ export default {
         disconnect( room ) {
             window.Echo.leave("canvas." + room.id );
         },
+        changePage( page ) {
+            this.currentPage = page;
+            this.getRooms();
+        },
         getRooms() {
-            axios.get('/canvas/rooms')
+            axios.get('/canvas/rooms?page=' + this.currentPage)
             .then(response => {
-                this.canvasRooms = response.data;
-                if (!this.currentRoom.id) {
-                    this.currentRoom = response.data[0];
-                }
+                this.canvasRooms = response.data.data;
+                this.currentPage = response.data.current_page;
+                this.lastPage = response.data.last_page;
+                this.pageLinks = response.data.links;
+                this.pageLinks.shift();
+                this.pageLinks.pop();
             })
             .catch(error => {
                 console.log(error);
             })
         },
         setRoom( room ) {
-            this.getRooms()
+            this.getRooms(); ///新規作成後の情報を取得したいため
             this.currentRoom = room;
         },
         getHistory() {
@@ -116,3 +140,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.page-no:last-child {
+    margin-right: 0;
+}
+</style>
