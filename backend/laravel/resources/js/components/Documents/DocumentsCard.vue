@@ -12,13 +12,13 @@ library.add(
     <div>
         <div class="flex items-center">
             <FontAwesomeIcon icon="newspaper" class="w-8 h-8 text-gray-400" />
-            <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">
+            <div class="ml-4 text-lg leading-7 font-semibold text-gray-600 abril-font">
                 Documentation
             </div>
         </div>
 
         <div class="ml-12">
-            <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+            <div class="mt-2 text-gray-600 text-sm">
                 ブログというかキュレーションサイトみたいなのを作る予定<br>
             </div>
         </div>
