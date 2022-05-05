@@ -14,11 +14,18 @@ class Tag extends Model
     ];
 
     protected $hidden = [
-        'pivot'
+        'pivot',
+        'created_at',
+        'updated_at'
     ];
 
     public function articles()
     {
         return $this->belongsToMany('App\Models\Article')->withTimestamps();
+    }
+
+    public function getTags()
+    {
+        return $this->get();
     }
 }

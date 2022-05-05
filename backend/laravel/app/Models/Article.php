@@ -38,13 +38,35 @@ class Article extends Model
                     ->withTimestamps();
     }
 
-    public function getAll()
+    public function getAll( $request )
     {
-        return $this->where('public', true)
+        $keywords = $request->get('keywords');
+        $tag = $request->get('tag');
+        $type = 'updated_at';
+        $sort = 'DESC';
+
+        $sql = $this->select('articles.*')
+                    ->leftJoin('article_tag', 'articles.id', '=', 'article_tag.article_id')
+                    ->leftJoin('tags', 'article_tag.tag_id', '=', 'tags.id')
+                    ->where('articles.public', true)
+                    ->when($request->has('keywords'), function($query) use ($keywords) {
+                        return $query->where('articles.title', 'like', '%'.$keywords.'%');
+                    })
+                    ->when($request->has('tag'), function ($query) use ($tag) {
+                        return $query->where('tags.name', $tag);
+                    })
+                    ->when($request->has('type'), function ($query) use (&$type) {
+                        $type = ($type == 'created') ? 'created_at' : 'updated_at';
+                    })
+                    ->when($request->has('sort'), function ($query) use (&$sort) {
+                        $sort = ($sort == 'asc') ? 'ASC' : 'DESC';
+                    })
                     ->with('tags:id,name')
                     ->with('user:id,name')
-                    ->orderBy('updated_at', 'DESC')
+                    ->orderBy('articles.'.$type, $sort)
+                    ->distinct()
                     ->get();
+        return $sql;
     }
 
     public function getMyArticles()
