@@ -8,6 +8,7 @@
         <div class="input-box">
             <label for="tagList">タグ検索</label>
             <select name="tagList rounded-md" v-model="inputs.tag">
+                <option value="">全て</option>
                 <option v-for="tag, index in tags" :key=index v-bind="tag.id">
                     {{ tag.name }}
                 </option>
