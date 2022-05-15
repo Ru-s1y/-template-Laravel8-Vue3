@@ -45,7 +45,14 @@ class Article extends Model
         $type = 'updated_at';
         $sort = 'DESC';
 
-        $sql = $this->select('articles.*')
+        $sql = $this->select(
+                        'articles.id',
+                        'articles.title',
+                        'articles.user_id',
+                        'articles.summary',
+                        'articles.created_at',
+                        'articles.updated_at'
+                    )
                     ->leftJoin('article_tag', 'articles.id', '=', 'article_tag.article_id')
                     ->leftJoin('tags', 'article_tag.tag_id', '=', 'tags.id')
                     ->where('articles.public', true)
@@ -61,7 +68,6 @@ class Article extends Model
                     ->when($request->has('sort'), function ($query) use (&$sort) {
                         $sort = ($sort == 'asc') ? 'ASC' : 'DESC';
                     })
-                    ->with('tags:id,name')
                     ->with('user:id,name')
                     ->orderBy('articles.'.$type, $sort)
                     ->distinct()
@@ -72,16 +78,16 @@ class Article extends Model
     public function getMyArticles()
     {
         return $this->where('user_id', Auth::id())
-                    ->with('tag:id,name')
+                    ->with('tags:id,name')
                     ->orderBy('updated_at', 'DESC')
                     ->get();
     }
 
     public function retrieve( $articleId )
     {
-        return $this->find(Auth::id())
+        return $this->where('id', $articleId)
                     ->where('public', true)
-                    ->with('tag:id,name')
+                    ->with('tags:id,name')
                     ->with('user:id,name')
                     ->get();
     }
