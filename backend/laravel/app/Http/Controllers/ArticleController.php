@@ -14,10 +14,10 @@ class ArticleController extends Controller
         $this->article = $article;
     }
 
-    public function articles()
+    public function articles(Request $request)
     {
         return $this->article
-                    ->getAll()
+                    ->getAll( $request )
                     ->toArray();
     }
 
